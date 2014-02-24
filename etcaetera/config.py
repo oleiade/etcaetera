@@ -1,67 +1,74 @@
+from collections import deque
+
 from etcaetera.policy import Policy
 from etcaetera.adapter import (
     Adapter,
-    Defaults
+    Defaults,
+    Overrides
 )
 
 
 class Config(dict):
-    def __init__(self, defaults=None, adapters=[]):
-        self.adapters = adapters
+    def __init__(self, defaults=None, adapters=None):
+        self.adapters = adapters or []
 
         if defaults is not None:
-            self.defaults = defaults
-            self.defaults.load()
+            if not isinstance(defaults, (Defaults, dict)):
+                raise TypeError("defaults has to be of Defaults type")
+
+            if isinstance(defaults, dict):
+                self.register(Defaults(data=defaults))
+            else:
+                self.register(defaults)
 
     def register(self, adapter):
         """Registers an adapter to be applied by config"""
-        pass
+        if not isinstance(adapter, Adapter):
+            raise TypeError("adapter has to be of Adapter type.")
 
-    def unregister(self, adapter):
-        """Unregisters an adapter from the config"""
-        pass
+        has_defaults = len(self.adapters) >= 1 and isinstance(self.adapters[0], Defaults)
+        has_overrides = len(self.adapters) >= 1 and isinstance(self.adapters[len(self.adapters) - 1], Overrides)
+
+        if isinstance(adapter, Defaults):
+            if has_defaults is True:
+                raise ValueError("Config can have only one Defaults adapter")
+            self.adapters.insert(0, adapter)
+        elif isinstance(adapter, Overrides):
+            if has_overrides is True:
+                raise ValueError("Config can have only one Overrides adapter")
+            self.adapters.append(adapter)
+        else:
+            if has_overrides is True:
+                # If adapters contains an Overrides adapter,
+                # insert at the index before it.
+                self.adapters.insert(len(self.adapters) - 1, adapter)
+            else:
+                # Otherwise, append it
+                self.adapters.append(adapter)
 
     @property
     def adapters(self):
         if not hasattr(self, '_adapters'):
-            self._adapters = set()
+            self._adapters = []
         return self._adapters
 
     @adapters.setter
     def adapters(self, value):
-        # Ensure adapters is a suitable sequence
-        if not isinstance(value, (list, tuple)):
-            raise TypeError(
-                "Adapters value has to be whether a list or a tuple. "
-                "Got {0} provided.".format(type(value))
-            )
-        elif isinstance(value, tuple):
-            value = list(value)
+        # Ensure adapters is a list of adapters
+        if not isinstance(value, list):
+            raise TypeError("adapters value has to be a list.")
 
-        if any(not isinstance(p, Adapter) for p in value):
-            raise ValueError("Every member of adapters value has to be of type Adapter")
+        # Ensure Defaults are unique and first adapter, and
+        # Overrides are unique and last
+        for idx, adapter in enumerate(value):
+            if not isinstance(adapter, Adapter):
+                raise TypeError("adapters value have to be of Adapter type.")
+            elif isinstance(adapter, Defaults) and idx != 0:
+                raise ValueError("Defaults adapter should always be first.")
+            elif isinstance(adapter, Overrides) and idx != (len(value) - 1):
+                raise ValueError("Overrides adapter should always be last.")
 
         self._adapters = value
-
-    @property
-    def defaults(self):
-        if not hasattr(self, '_defaults'):
-            self._defaults = Defaults()
-        return self._defaults
-
-    @defaults.setter
-    def defaults(self, value):
-        if not isinstance(value, (Defaults, dict)):
-            raise TypeError(
-                "Defaults value has to be of Defaults or dict type. "
-
-                "Got {0} instead.".format(type(value))
-            )
-
-        if isinstance(value, dict):
-            self._defaults = Defaults(config=self, data=value)
-        else:
-            self._defaults = value
 
     def load(self):
         for adapter in self.adapters:

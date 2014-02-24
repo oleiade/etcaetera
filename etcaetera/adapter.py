@@ -57,11 +57,18 @@ class File(Adapter):
 
 
 class Defaults(Adapter):
-    def __init__(self, config, data={}, *args, **kwargs):
+    def __init__(self, data={}, *args, **kwargs):
         super(Defaults, self).__init__(*args, **kwargs)
         self.data = data
 
     def load(self):
         pass
-        
 
+
+class Overrides(Adapter):
+    def __init__(self, data={}, *args, **kwargs):
+        super(Overrides, self).__init__(*args, **kwargs)
+        self.data = data
+
+    def load(self):
+        pass
