@@ -67,7 +67,7 @@ class File(Adapter):
 class Defaults(Adapter):
     def __init__(self, data={}, *args, **kwargs):
         super(Defaults, self).__init__(*args, **kwargs)
-        self.data = data
+        self.data = {self._format_key(k):v for k,v in data.iteritems()}
 
     def load(self):
         pass
@@ -76,7 +76,7 @@ class Defaults(Adapter):
 class Overrides(Adapter):
     def __init__(self, data={}, *args, **kwargs):
         super(Overrides, self).__init__(*args, **kwargs)
-        self.data = data
+        self.data = {self._format_key(k):v for k,v in data.iteritems()}
 
     def load(self):
         pass

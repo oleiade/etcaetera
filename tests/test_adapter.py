@@ -130,5 +130,5 @@ class TestDefaults:
     def test_load(self):
         d = Defaults({"abc": "123"})
         d.load()
-        assert "abc" in d.data
-        assert d.data["abc"] == "123"
+        assert "ABC" in d.data
+        assert d.data["ABC"] == "123"

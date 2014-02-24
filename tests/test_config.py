@@ -175,8 +175,8 @@ class TestConfig:
         config.register(defaults)
         config.load()
 
-        assert "abc" in config
-        assert config["abc"] == "123"
+        assert "ABC" in config
+        assert config["ABC"] == "123"
 
     def test_load_passes_its_keys_to_env_loading(self):
         env = Env(keys=["USER"])
