@@ -3,7 +3,8 @@ from collections import deque
 from etcaetera.adapter import (
     Adapter,
     Defaults,
-    Overrides
+    Overrides,
+    Env
 )
 
 
@@ -71,5 +72,9 @@ class Config(dict):
 
     def load(self):
         for adapter in self.adapters:
-            adapter.load()
+            if isinstance(adapter, Env):
+                adapter.load(keys=self.keys())
+            else:
+                adapter.load()
+
             self.update(adapter.data)

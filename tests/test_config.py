@@ -169,11 +169,25 @@ class TestConfig:
         assert config.adapters[2] == overrides_adapter
 
     def test_load_method_loads_values_from_adapters(self):
-        env = Env(keys=["USER"])
+        defaults = Defaults({"abc": "123"})
         config = Config()
+
+        config.register(defaults)
+        config.load()
+
+        assert "abc" in config
+        assert config["abc"] == "123"
+
+    def test_load_passes_its_keys_to_env_loading(self):
+        env = Env(keys=["USER"])
+        config = Config({"PATH":None})
 
         config.register(env)
         config.load()
 
         assert "USER" in config
+        assert "PATH" in config
         assert config["USER"] == os.environ["USER"]
+        assert config["PATH"] == os.environ["PATH"]
+
+
