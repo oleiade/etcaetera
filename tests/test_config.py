@@ -168,3 +168,12 @@ class TestConfig:
         assert config.adapters[1] == file_adapter
         assert config.adapters[2] == overrides_adapter
 
+    def test_load_method_loads_values_from_adapters(self):
+        env = Env(keys=["USER"])
+        config = Config()
+
+        config.register(env)
+        config.load()
+
+        assert "USER" in config
+        assert config["USER"] == os.environ["USER"]

@@ -72,3 +72,4 @@ class Config(dict):
     def load(self):
         for adapter in self.adapters:
             adapter.load()
+            self.update(adapter.data)
