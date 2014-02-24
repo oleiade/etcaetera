@@ -7,26 +7,34 @@ from etcaetera.constants import (
 
 
 class Adapter(object):
-    def __init__(self, *args, **kwargs):
+    def __init__(self, config=None, *args, **kwargs):
         self.data = {} 
+
+    def _format_key(self, key):
+        return key.strip().upper().replace(' ', '_')
 
     def load(self):
         raise NotImplementedError
 
 
 class Env(Adapter):
+    """Environment variables adapter
+
+    Loads values from the system environment.
+    Keys to be fetched should be passed a string list.
+    """
     def __init__(self, keys=[], *args, **kwargs):
         super(Env, self).__init__(*args, **kwargs)
-        self.keys = keys
+        self.keys = [self._format_key(k) for k in keys]
 
-    def _format_env_key(self, key):
-        return key.strip().upper().replace(' ', '_')
+    def load(self, keys=None):
+        env_keys = self.keys
 
-    def load(self):
-        keys = self.keys
+        if keys is not None and isinstance(keys, list):
+            env_keys.extend(keys)
 
-        for key in keys:
-            env_value = os.environ.get(self._format_env_key(key))
+        for key in [self._format_key(k) for k in env_keys]:
+            env_value = os.environ.get(self._format_key(key))
             if env_value is not None:
                 self.data[key] = env_value
 
@@ -46,10 +54,10 @@ class File(Adapter):
 
         if file_extension.lower() in JSON_EXTENSIONS:
             import json
-            self.data = json.load(fd)
+            self.data = {self._format_key(k):v for k,v in json.load(fd).iteritems()}
         elif file_extension.lower() in YAML_EXTENSIONS:
             import yaml
-            self.data = yaml.load(fd, Loader=yaml.CLoader)
+            self.data = {self._format_key(k):v for k,v in yaml.load(fd, Loader=yaml.CLoader).iteritems()}
         else:
             raise ValueError("Unhandled file extension {0}".format(file_extension))
 

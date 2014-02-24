@@ -31,6 +31,7 @@ setup(
     package_dir={'etcaetera': 'etcaetera'},
     include_package_data=True,
     install_requires=[
+        'PyYaml',
     ],
     license="BSD",
     zip_safe=False,
