@@ -1,6 +1,5 @@
 from collections import deque
 
-from etcaetera.policy import Policy
 from etcaetera.adapter import (
     Adapter,
     Defaults,

@@ -1,2 +1,0 @@
-class Policy(object):
-    pass
