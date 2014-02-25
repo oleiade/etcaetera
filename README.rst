@@ -234,6 +234,56 @@ File adapter will load configuration settings from a file.
 Supported formats are json, yaml and python module files. Every key-value pairs
 stored in the pointed file will be load in the *Config* object it is registered to.
 
+
+Python module files
+```````````````````
+
+Python module files should be in the same format as Django settings files. Only uppercased variables
+will be loaded. Any python data structures are allowed to be used.
+
+*Here's an example*
+
+*Given the following settings.py file*
+
+.. code-block:: bash
+
+    $ cat /my/settings.py
+    FIRST_SETTING = 123
+    SECOND_SETTING = "this is the second value"
+    THIRD_SETTING = {"easy as": "do re mi"}
+    ignored_value = "this will be ignore"
+
+*File adapter output will look like this*:
+
+.. code-block:: python
+
+    from etcaetera.adapter import File
+
+    file = File('/my/settings.py')
+    file.load()
+
+    print file.data
+    {
+        "FIRST_SETTING": 123,
+        "SECOND_SETTING": "this is the second value",
+        "THIRD_SETTING": {"easy as": "do re mi"}
+    }
+
+Serialized files (aka json and yaml)
+````````````````````````````````````
+
+*Given the following json file content*:
+
+.. code-block:: bash
+
+    $ cat /my/json/file.json
+    {
+        "FIRST_SETTING": "first json file extracted setting",
+        "SECOND_SETTING": "second json file extracted setting"
+    }
+
+*File adapter output will look like this*:
+
 .. code-block:: python
 
     from etcaetera.adapter import File
