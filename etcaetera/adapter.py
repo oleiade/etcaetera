@@ -66,7 +66,7 @@ class File(Adapter):
             self.data = {self._format_key(k):v for k,v in yload(fd, Loader=Loader).items()}
         elif file_extension.lower() in PYTHON_EXTENSIONS:
             mod = imp.load_source('mod', self.filepath)
-            self.data = {k:v for k,v in vars(mod).iteritems() if k.isupper()}
+            self.data = {k:v for k,v in vars(mod).items() if k.isupper()}
         else:
             raise ValueError("Unhandled file extension {0}".format(file_extension))
 
