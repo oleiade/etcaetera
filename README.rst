@@ -14,11 +14,11 @@ Etcaetera
 What?
 =====
 
-Etcaetera helps you loading your application configuration from multiple sources in a simple way.
+Etcaetera is the simplest way for you to load your application configuration from multiple sources.
 
-It exposes a single **Config** object which you add prioritized sources adapters to (env, files, cmdline, modules...).
+It exposes a single **Config** object to which you add prioritized sources adapters (env, files, cmdline, modules...).
 
-Once you call ``load`` method over it: your settings are loaded from your adapters in order, all your configuration is stored in the **Config** object.
+Once you call ``load`` method on it: your settings are loaded from your adapters in the right order, all your configuration is stored in the **Config** object.
 
 You're **done**.
 
@@ -29,11 +29,11 @@ Why?
 
 Managing a large application configuration sources can be a pain in the neck.
 
-Command line, files, system environment, modules, a lot of mixed sources can provide you with the settings you seek.
+Command line, files, system environment, modules, the settings you seek come from a lot of mixed sources.
 
-They are all accessed in different ways, and establishing a merging strategy of these differents sources can sometimes look like impossible.
+They all have a different accessing mode and merging them can sometimes seem impossible !
 
-Etcaetera provides you a simple and unified way to handle all the complexity in a single place.
+Etcaetera provides you with a simple and unified way to handle all the complexity in a single place.
 
 Installation
 ============
@@ -61,7 +61,7 @@ Usage
 Dive
 ----
 
-A real world example worths it all
+A real world example is worth a thousand words
 
 .. code-block:: python
 
@@ -99,8 +99,7 @@ A real world example worths it all
 Config object
 -------------
 
-The config object is the central place for your whole application settings. It will load your adapters
-in the order you've registered them, and update itself using it's data.
+The config object is the central place for your whole application settings. It loads your adapters in the order you've registered them, and updates itself using it's data.
 
 Please note that **Defaults** adapter will always be loaded first, and **Overrides** will always be loaded last.
 
@@ -114,7 +113,7 @@ Please note that **Defaults** adapter will always be loaded first, and **Overrid
 
     >>> print config
     {
-        "ABC": "123  # every Config keys will be automatically uppercased
+        "ABC": "123  # every Config keys will automatically be uppercased
     }
 
     # When you register adapters to it, they are not immediately evaluated.
@@ -141,8 +140,8 @@ Please note that **Defaults** adapter will always be loaded first, and **Overrid
 Adapters
 --------
 
-Adapters are interfaces to configuration sources. They load settings from their custom source type,
-and expose them as a normalized dict to *Config* objects.
+Adapters are the interfaces with configuration sources. They load settings from their custom source type,
+and they expose them as a normalized dict to *Config* objects.
 
 Right now, etcaetera provides the following adapters:
     * *Defaults*: sets some default settings
@@ -179,14 +178,14 @@ or as a dictionary.
 Overrides adapter
 ~~~~~~~~~~~~~~~~~
 
-Overrides adapter will override *Config* object values with it's own.
-It will always be evaluated last when ``Config.load`` method is called.
+The Overrides adapter overrides *Config* object values with it's own values.
+It will always be evaluated last when the ``Config.load`` method is called.
 
 .. code-block:: python
 
     >>> from etcaetera.adapter import Overrides
 
-    # Overrides adapter helps you setting overriding configuration settings.
+    # The Overrides adapter helps you set overriding configuration settings.
     # When registered over a Config objects, it will always be evaluated last.
     # Use it if you wish to force some config values.
     >>> overrides_adapter = Overrides({"USER": "overrided value"})
@@ -209,10 +208,9 @@ It will always be evaluated last when ``Config.load`` method is called.
 Env adapter
 ~~~~~~~~~~~
 
-Env adapter will load settings from your system environement.
-It should be provided with a list of keys to fetch. If you don't provide
-it yourself, the *Config* object it's registered to will automatically
-provide it's own.
+The Env adapter loads settings from your system environement.
+It should come with a list of keys to fetch. If you don't provide the keys yourself,
+the parent *Config* object will automatically provide it's own.
 
 .. code-block:: python
 
@@ -235,16 +233,16 @@ provide it's own.
 File adapter
 ~~~~~~~~~~~~
 
-File adapter will load configuration settings from a file.
+The File adapter will load the configuration settings from a file.
 Supported formats are json, yaml and python module files. Every key-value pairs
-stored in the pointed file will be load in the *Config* object it is registered to.
+stored in the pointed file will be loaded in the *Config* object it is registered to.
 
 
 Python module files
 ```````````````````
 
-Python module files should be in the same format as Django settings files. Only uppercased variables
-will be loaded. Any python data structures are allowed to be used.
+The Python module files should be in the same format as the Django settings files. Only uppercased variables
+will be loaded. Any python data structures can be used.
 
 *Here's an example*
 
@@ -287,14 +285,14 @@ Serialized files (aka json and yaml)
         "SECOND_SETTING": "second json file extracted setting"
     }
 
-*File adapter output will look like this*:
+*The File adapter output will look like this*:
 
 .. code-block:: python
 
     >>> from etcaetera.adapter import File
 
-    # File adapter awaits on a file path at construction.
-    # All you've gotta do then, is letting the magic happen
+    # The File adapter awaits on a file path at construction.
+    # All you have to do then, is to let the magic happen
     >>> file = File('/my/json/file.json')
     >>> file.load()
 
@@ -308,9 +306,8 @@ Serialized files (aka json and yaml)
 Module adapter
 ~~~~~~~~~~~~~~
 
-Module adapter will load settings from a python module. It emulates the django
-settings module loading behavior, in that every uppercased locals to the module
-will be matched.
+The Module adapter will load settings from a python module. It emulates the django
+settings module loading behavior, so that every uppercased locals of the module is matched.
 
 **Given a mymodule.settings module looking this**:
 
@@ -325,7 +322,7 @@ will be matched.
 
     >>> from etcaetera.adapter import Module
 
-    # Will extract every uppercased local variables of the module
+    # It will extract all of the module's uppercased local variables
     >>> module = Module(mymodule.settings)
     >>> module.load()
 
@@ -341,11 +338,11 @@ Contribute
 
 Please read the `Contributing <https://github.com/oleiade/etcaetera/blob/develop/CONTRIBUTING.rst>`_ instructions
 
-For the lazy, here's a sum up:
+If you are lazy, here's a summary:
 
-1. Found a bug? Wanna add a feature? Check for open issues or open a fresh issue to start a discussion about it.
+1. Found a bug? Want to add a feature? Check for open issues or open a fresh one to start a discussion about it.
 2. Fork the repository, and start making your changes
-3. Write some tests showing you fixed the actual bug or your feature works as expected
+3. Write some tests showing you fixed the current bug or your feature works as expected
 4. Fasten your seatbelt, and send a pull request to the *develop* branch.
 
 
