@@ -1,8 +1,10 @@
 import os
+import imp
 
 from etcaetera.constants import (
     JSON_EXTENSIONS,
-    YAML_EXTENSIONS
+    YAML_EXTENSIONS,
+    PYTHON_EXTENSIONS
 )
 
 
@@ -62,6 +64,9 @@ class File(Adapter):
             except ImportError:
                 from yaml import Loader
             self.data = {self._format_key(k):v for k,v in yload(fd, Loader=Loader).items()}
+        elif file_extension.lower() in PYTHON_EXTENSIONS:
+            mod = imp.load_source('mod', self.filepath)
+            self.data = {k:v for k,v in vars(mod).iteritems() if k.isupper()}
         else:
             raise ValueError("Unhandled file extension {0}".format(file_extension))
 
