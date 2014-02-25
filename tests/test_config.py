@@ -179,7 +179,7 @@ class TestConfig:
         assert config["ABC"] == "123"
 
     def test_load_passes_its_keys_to_env_loading(self):
-        env = Env(keys=["USER"])
+        env = Env(keys=["USER", "PATH"])
         config = Config({"PATH":None})
 
         config.register(env)

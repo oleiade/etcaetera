@@ -21,7 +21,8 @@ def json_file():
         dir='/tmp',
         delete=False
     )
-    json.dump(test_data, sample_json_file)
+    dumped_data = json.dumps(test_data)
+    sample_json_file.write(dumped_data.encode('utf-8'))  # Py3 compatibility
     sample_json_file.close()
 
     def fin():
@@ -38,7 +39,8 @@ def yaml_file():
         dir='/tmp',
         delete=False
     )
-    yaml.dump(test_data, sample_yaml_file)
+    dumped_data = yaml.dump(test_data)
+    sample_yaml_file.write(dumped_data.encode('utf-8'))  # Py3 compatibility
     sample_yaml_file.close()
 
     def fin():

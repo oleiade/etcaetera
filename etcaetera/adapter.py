@@ -54,14 +54,14 @@ class File(Adapter):
 
         if file_extension.lower() in JSON_EXTENSIONS:
             import json
-            self.data = {self._format_key(k):v for k,v in json.load(fd).iteritems()}
+            self.data = {self._format_key(k):v for k,v in json.load(fd).items()}
         elif file_extension.lower() in YAML_EXTENSIONS:
             from yaml import load as yload, dump as ydump
             try:
                 from yaml import CLoader as Loader
             except ImportError:
                 from yaml import Loader
-            self.data = {self._format_key(k):v for k,v in yload(fd, Loader=Loader).iteritems()}
+            self.data = {self._format_key(k):v for k,v in yload(fd, Loader=Loader).items()}
         else:
             raise ValueError("Unhandled file extension {0}".format(file_extension))
 
@@ -71,7 +71,7 @@ class File(Adapter):
 class Defaults(Adapter):
     def __init__(self, data={}, *args, **kwargs):
         super(Defaults, self).__init__(*args, **kwargs)
-        self.data = {self._format_key(k):v for k,v in data.iteritems()}
+        self.data = {self._format_key(k):v for k,v in data.items()}
 
     def load(self):
         pass
@@ -80,7 +80,7 @@ class Defaults(Adapter):
 class Overrides(Adapter):
     def __init__(self, data={}, *args, **kwargs):
         super(Overrides, self).__init__(*args, **kwargs)
-        self.data = {self._format_key(k):v for k,v in data.iteritems()}
+        self.data = {self._format_key(k):v for k,v in data.items()}
 
     def load(self):
         pass
