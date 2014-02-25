@@ -56,8 +56,12 @@ class File(Adapter):
             import json
             self.data = {self._format_key(k):v for k,v in json.load(fd).iteritems()}
         elif file_extension.lower() in YAML_EXTENSIONS:
-            import yaml
-            self.data = {self._format_key(k):v for k,v in yaml.load(fd, Loader=yaml.CLoader).iteritems()}
+            from yaml import load as yload, dump as ydump
+            try:
+                from yaml import CLoader as Loader
+            except ImportError:
+                from yaml import Loader
+            self.data = {self._format_key(k):v for k,v in yload(fd, Loader=Loader).iteritems()}
         else:
             raise ValueError("Unhandled file extension {0}".format(file_extension))
 
