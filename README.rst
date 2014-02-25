@@ -73,12 +73,13 @@ A real world example worths it all
 
     # And create a bunch of adapters
     env_adapter = Env(keys=["MY_FIRST_SETTING", "MY_SECOND_SETTING"])
-    yaml_file_adapter = File('/etc/my_yaml_settings.yaml')
+    python_file_adapter = File('/etc/my/python/settings.py')
     json_file_adapter = File('/etc/my_json_settings.json')
+    module_adapter = Module(os)
     overrides = Overrides({"MY_FIRST_SETTING": "my forced value"})
 
     # Let's register them
-    config.register([env_adapter, yaml_file_adapter, json_file_adapter, overrides])
+    config.register([env_adapter, python_file_adapter, json_file_adapter, module_adapter, overrides])
 
     # Load configuration
     config.load()
@@ -145,9 +146,9 @@ Right now, etcaetera provides the following adapters:
     * *Overrides*: overrides the config settings values
     * *Env*: extracts configuration values from system environment
     * *File*: extracts configuration values from a file. Accepted format are: json, yaml, python module file (see *File adapter* section for more details)
+    * *Module*: extracts configuration values from a python module. Like in django, only uppercased variables will be matched
 
 In a close future, etcaetera may provide adapters for:
-    * *Module*: would load settings from a $PYTHONPATH module. Upper cased locals would then be matched
     * *File* ini format support: would load settings from an ini file
 
 Defaults adapter
@@ -297,6 +298,37 @@ Serialized files (aka json and yaml)
     {
         "FIRST_SETTING": "first json file extracted setting",
         "SECOND_SETTING": "second json file extracted setting"
+    }
+
+
+Module adapter
+~~~~~~~~~~~~~~
+
+Module adapter will load settings from a python module. It emulates the django
+settings module loading behavior, in that every uppercased locals to the module
+will be matched.
+
+**Given a mymodule.settings module looking this**:
+
+.. code-block:: python
+
+    MY_FIRST_SETTING = 123
+    MY_SECOND_SETTING = "abc"
+
+**Loaded module data will look like this**:
+
+.. code-block:: python
+
+    from etcaetera.adapter import Module
+
+    # Will extract every uppercased local variables of the module
+    module = Module(mymodule.settings)
+    module.load()
+
+    print module.data
+    {
+        MY_FIRST_SETTING = 123
+        MY_SECOND_SETTING = "abc"
     }
 
 
