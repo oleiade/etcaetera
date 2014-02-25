@@ -86,6 +86,122 @@ A real world example worths it all
     }
 
 
+Adapters
+--------
+
+Adapters are interfaces to configuration sources. They load settings from their custom source type,
+and expose them as a normalized dict to *Config* objects.
+
+Right now, etcaetera provides the following adapters:
+    * *Defaults*: sets some default settings
+    * *Overrides*: overrides the config settings values
+    * *Env*: extracts configuration values from system environment
+    * *File*: extracts configuration values from a file. Accepted format are: json, yaml, python module file (see *File adapter* section for more details)
+
+In a close future, etcaetera may provide adapters for:
+    * *Module*: would load settings from a $PYTHONPATH module. Upper cased locals would then be matched
+    * *File* ini format support: would load settings from an ini file
+
+Defaults adapter
+~~~~~~~~~~~~~~~~
+
+Defaults adapter provides your configuration object with default values.
+It will always be evaluated first when ``Config.load`` method is called.
+You can whether provide defaults values to *Config* as a *Defaults* object
+or as a dictionary.
+
+.. code-block:: python
+
+    from etcaetera.adapter import Defaults
+
+    # Defaults adapter provides default configuration settings
+    defaults = Defaults({"ABC": "123"})
+    config = Config(defaults)
+
+    print config
+    {
+        "ABC": "123"
+    }
+
+Overrides adapter
+~~~~~~~~~~~~~~~~~
+
+Overrides adapter will override *Config* object values with it's own.
+It will always be evaluated last when ``Config.load`` method is called.
+
+.. code-block:: python
+
+    from etcaetera.adapter import Overrides
+
+    # Overrides adapter helps you setting overriding configuration settings.
+    # When registered over a Config objects, it will always be evaluated last.
+    # Use it if you wish to force some config values.
+    overrides_adapter = Overrides({"USER": "overrided value"})
+    config = Config({
+        "USER": "default_value",
+        "FIRST_SETTING": "first setting value"
+    })
+
+    config.register(overrides_default)
+    config.load()
+
+    print config
+    {
+        "USER": "overrided user",
+        "FIRST_SETTING": "first setting value"
+    }
+
+
+
+Env adapter
+~~~~~~~~~~~
+
+Env adapter will load settings from your system environement.
+It should be provided with a list of keys to fetch. If you don't provide
+it yourself, the *Config* object it's registered to will automatically
+provide it's own.
+
+.. code-block:: python
+
+    from etcaetera.adapter import Env
+
+    # You can provide keys to be fetched by the adapter at construction
+    env = Env(keys=["USER", "PATH"])
+
+    # Or whenever you call load over it. They will be merged
+    # with those provided at initialization.
+    env.load(keys=["PWD"])
+
+    print env.data
+    {
+        "USER": "user extracted from environment",
+        "PATH": "path extracted from environment",
+        "PWD": "pwd extracted from environment"
+    }
+
+File adapter
+~~~~~~~~~~~~
+
+File adapter will load configuration settings from a file.
+Supported formats are json, yaml and python module files. Every key-value pairs
+stored in the pointed file will be load in the *Config* object it is registered to.
+
+.. code-block:: python
+
+    from etcaetera.adapter import File
+
+    # File adapter awaits on a file path at construction.
+    # All you've gotta do then, is letting the magic happen
+    file = File('/my/json/file.json')
+    file.load()
+
+    print file.data
+    {
+        "FIRST_SETTING": "first json file extracted setting",
+        "SECOND_SETTING": "second json file extracted setting"
+    }
+
+
 Contribute
 ==========
 
