@@ -86,6 +86,18 @@ A real world example worths it all
     }
 
 
+Contribute
+==========
+
+Please read the `<Contributing >`_ instructions
+
+For the lazy, here's a sum up:
+
+1. Found a bug? Wanna add a feature? Check for open issues or open a fresh issue to start a discussion about it.
+2. Fork the repository, and start making your changes
+3. Write some tests showing you fixed the actual bug or your feature works as expected
+4. Fasten your seatbelt, and send a pull request to the *develop* branch.
+
 
 * Free software: MIT license
 * Documentation: http://etcaetera.rtfd.org.

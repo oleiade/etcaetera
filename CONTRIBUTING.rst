@@ -88,7 +88,7 @@ Ready to contribute? Here's how to set up `etcaetera` for local development.
     $ git commit -m "Your detailed description of your changes."
     $ git push origin name-of-your-bugfix-or-feature
 
-7. Submit a pull request through the GitHub website.
+7. Submit a pull request to the *develop* branch through the GitHub website.
 
 Pull Request Guidelines
 -----------------------
@@ -103,9 +103,3 @@ Before you submit a pull request, check that it meets these guidelines:
    https://travis-ci.org/oleiade/etcaetera/pull_requests
    and make sure that the tests pass for all supported Python versions.
 
-Tips
-----
-
-To run a subset of tests::
-
-	$ python -m unittest tests.test_etcaetera
