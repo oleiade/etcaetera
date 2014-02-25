@@ -15,18 +15,24 @@ What?
 =====
 
 Etcaetera helps you loading your application configuration from multiple sources in a simple way.
+
 It exposes a single **Config** object which you add prioritized sources adapters to (env, files, cmdline, modules...).
-Once you call ``load`` method over it: You're done. Your settings are loaded from your adapters in order, and your
-all configuration is stored in the **Config** object.
-You're done.
+
+Once you call ``load`` method over it: your settings are loaded from your adapters in order, all your configuration is stored in the **Config** object.
+
+You're **done**.
+
 
 
 Why?
 ====
 
 Managing a large application configuration sources can be a pain in the neck.
+
 Command line, files, system environment, modules, a lot of mixed sources can provide you with the settings you seek.
+
 They are all accessed in different ways, and establishing a merging strategy of these differents sources can sometimes look like impossible.
+
 Etcaetera provides you a simple and unified way to handle all the complexity in a single place.
 
 Installation
@@ -51,6 +57,9 @@ With setuptools
 
 Usage
 =====
+
+Dive
+----
 
 A real world example worths it all
 
@@ -83,6 +92,45 @@ A real world example worths it all
         "FIRST_YAML_SETTING": "first yaml setting value found in yaml settings",
         "FIRST_JSON_SETTING": "first json setting value found in json settings",
         ...
+    }
+
+
+Config object
+-------------
+
+The config object is the central place for your whole application settings. It will load your adapters
+in the order you've registered them, and update itself using it's data.
+
+Please note that **Defaults** adapter will always be loaded first, and **Overrides** will always be loaded last.
+
+.. code-block:: python
+
+    from etcaetera.config import Config
+
+    # You can provide defaults to Config at initialization, whether as a Defaults object,
+    # or as a dict.
+    config = Config({"abc": "123"})
+
+    print config
+    {
+        "ABC": "123  # every Config keys will be automatically uppercased
+    }
+
+    # When you register adapters to it, they are not immediately evaluated.
+    config.register(Env(["USER", "PWD"])
+    assert "USER" not in config
+    assert "PWD" not in config
+    config.register(Overrides({"abc": "do re mi"})
+    assert config["ABC"] != "do re mi"
+
+    # Whenever you call load, adapters are evaluated and your config
+    # values are updated accordingly
+    config.load()
+    print config
+    {
+        "ABC": "do re mi",
+        "USER": "your user",
+        "PWD": "/current/working/directory"
     }
 
 
