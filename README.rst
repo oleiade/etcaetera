@@ -43,16 +43,16 @@ With pip
 
 .. code-block:: bash
 
-    pip install etcaetera
+    $ pip install etcaetera
 
 With setuptools
 ---------------
 
 .. code-block:: bash
 
-    git clone git@github.com:oleiade/etcaetera
-    cd etcaetera
-    python setup.py install
+    $ git clone git@github.com:oleiade/etcaetera
+    $ cd etcaetera
+    $ python setup.py install
 
 
 Usage
@@ -65,28 +65,28 @@ A real world example worths it all
 
 .. code-block:: python
 
-    from etcaetera.config import Config
-    from etcaetera.adapters import Defaults, Overrides, Env, File
+    >>> from etcaetera.config import Config
+    >>> from etcaetera.adapters import Defaults, Overrides, Env, File
 
     # Let's create a new configuration object
-    config = Config()
+    >>> config = Config()
 
     # And create a bunch of adapters
-    env_adapter = Env(keys=["MY_FIRST_SETTING", "MY_SECOND_SETTING"])
-    python_file_adapter = File('/etc/my/python/settings.py')
-    json_file_adapter = File('/etc/my_json_settings.json')
-    module_adapter = Module(os)
-    overrides = Overrides({"MY_FIRST_SETTING": "my forced value"})
+    >>> env_adapter = Env(keys=["MY_FIRST_SETTING", "MY_SECOND_SETTING"])
+    >>> python_file_adapter = File('/etc/my/python/settings.py')
+    >>> json_file_adapter = File('/etc/my_json_settings.json')
+    >>> module_adapter = Module(os)
+    >>> overrides = Overrides({"MY_FIRST_SETTING": "my forced value"})
 
     # Let's register them
-    config.register([env_adapter, python_file_adapter, json_file_adapter, module_adapter, overrides])
+    >>> config.register([env_adapter, python_file_adapter, json_file_adapter, module_adapter, overrides])
 
     # Load configuration
-    config.load()
+    >>> config.load()
 
 
     # And that's it
-    print config
+    >>> print config
     {
         "MY_FIRST_SETTING": "my forced value",
         "MY_SECOND_SETTING": "my second value",
@@ -106,28 +106,31 @@ Please note that **Defaults** adapter will always be loaded first, and **Overrid
 
 .. code-block:: python
 
-    from etcaetera.config import Config
+    >>> from etcaetera.config import Config
 
     # You can provide defaults to Config at initialization, whether as a Defaults object,
     # or as a dict.
-    config = Config({"abc": "123"})
+    >>> config = Config({"abc": "123"})
 
-    print config
+    >>> print config
     {
         "ABC": "123  # every Config keys will be automatically uppercased
     }
 
     # When you register adapters to it, they are not immediately evaluated.
-    config.register(Env(["USER", "PWD"])
-    assert "USER" not in config
-    assert "PWD" not in config
-    config.register(Overrides({"abc": "do re mi"})
-    assert config["ABC"] != "do re mi"
+    >>> config.register(Env(["USER", "PWD"])
+    >>> assert "USER" not in config
+    True
+    >>> assert "PWD" not in config
+    True
+    >>> config.register(Overrides({"abc": "do re mi"})
+    >>> assert config["ABC"] != "do re mi"
+    True
 
     # Whenever you call load, adapters are evaluated and your config
     # values are updated accordingly
-    config.load()
-    print config
+    >>> config.load()
+    >>> print config
     {
         "ABC": "do re mi",
         "USER": "your user",
@@ -149,6 +152,7 @@ Right now, etcaetera provides the following adapters:
     * *Module*: extracts configuration values from a python module. Like in django, only uppercased variables will be matched
 
 In a close future, etcaetera may provide adapters for:
+    * *Argv* argparse format support: would load settings from an argparser parser attributes
     * *File* ini format support: would load settings from an ini file
 
 Defaults adapter
@@ -161,13 +165,13 @@ or as a dictionary.
 
 .. code-block:: python
 
-    from etcaetera.adapter import Defaults
+    >>> from etcaetera.adapter import Defaults
 
     # Defaults adapter provides default configuration settings
-    defaults = Defaults({"ABC": "123"})
-    config = Config(defaults)
+    >>> defaults = Defaults({"ABC": "123"})
+    >>> config = Config(defaults)
 
-    print config
+    >>> print config
     {
         "ABC": "123"
     }
@@ -180,21 +184,21 @@ It will always be evaluated last when ``Config.load`` method is called.
 
 .. code-block:: python
 
-    from etcaetera.adapter import Overrides
+    >>> from etcaetera.adapter import Overrides
 
     # Overrides adapter helps you setting overriding configuration settings.
     # When registered over a Config objects, it will always be evaluated last.
     # Use it if you wish to force some config values.
-    overrides_adapter = Overrides({"USER": "overrided value"})
-    config = Config({
+    >>> overrides_adapter = Overrides({"USER": "overrided value"})
+    >>> config = Config({
         "USER": "default_value",
         "FIRST_SETTING": "first setting value"
     })
 
-    config.register(overrides_default)
-    config.load()
+    >>> config.register(overrides_default)
+    >>> config.load()
 
-    print config
+    >>> print config
     {
         "USER": "overrided user",
         "FIRST_SETTING": "first setting value"
@@ -212,16 +216,16 @@ provide it's own.
 
 .. code-block:: python
 
-    from etcaetera.adapter import Env
+    >>> from etcaetera.adapter import Env
 
     # You can provide keys to be fetched by the adapter at construction
-    env = Env(keys=["USER", "PATH"])
+    >>> env = Env(keys=["USER", "PATH"])
 
     # Or whenever you call load over it. They will be merged
     # with those provided at initialization.
-    env.load(keys=["PWD"])
+    >>> env.load(keys=["PWD"])
 
-    print env.data
+    >>> print env.data
     {
         "USER": "user extracted from environment",
         "PATH": "path extracted from environment",
@@ -258,12 +262,12 @@ will be loaded. Any python data structures are allowed to be used.
 
 .. code-block:: python
 
-    from etcaetera.adapter import File
+    >>> from etcaetera.adapter import File
 
-    file = File('/my/settings.py')
-    file.load()
+    >>> file = File('/my/settings.py')
+    >>> file.load()
 
-    print file.data
+    >>> print file.data
     {
         "FIRST_SETTING": 123,
         "SECOND_SETTING": "this is the second value",
@@ -287,14 +291,14 @@ Serialized files (aka json and yaml)
 
 .. code-block:: python
 
-    from etcaetera.adapter import File
+    >>> from etcaetera.adapter import File
 
     # File adapter awaits on a file path at construction.
     # All you've gotta do then, is letting the magic happen
-    file = File('/my/json/file.json')
-    file.load()
+    >>> file = File('/my/json/file.json')
+    >>> file.load()
 
-    print file.data
+    >>> print file.data
     {
         "FIRST_SETTING": "first json file extracted setting",
         "SECOND_SETTING": "second json file extracted setting"
@@ -319,13 +323,13 @@ will be matched.
 
 .. code-block:: python
 
-    from etcaetera.adapter import Module
+    >>> from etcaetera.adapter import Module
 
     # Will extract every uppercased local variables of the module
-    module = Module(mymodule.settings)
-    module.load()
+    >>> module = Module(mymodule.settings)
+    >>> module.load()
 
-    print module.data
+    >>> print module.data
     {
         MY_FIRST_SETTING = 123
         MY_SECOND_SETTING = "abc"
