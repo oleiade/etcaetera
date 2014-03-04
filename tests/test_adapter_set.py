@@ -1,7 +1,6 @@
 import pytest
 
 from etcaetera.adapter import *
-from etcaetera.adapter_set import AdapterSet
 
 
 class TestAdapterSet:
