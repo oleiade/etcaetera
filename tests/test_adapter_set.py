@@ -176,3 +176,35 @@ class TestAdapterSet:
         assert s.overrides is None
         s.append(Overrides())
         assert s.overrides is not None
+
+    def test_insert_at_negative_index_raises(self):
+        s = AdapterSet()
+        
+        with pytest.raises(IndexError):
+            s.insert(-1, Env())
+
+    def test_insert_invalid_type_raises(self):
+        s = AdapterSet()
+
+        with pytest.raises(TypeError):
+            s.insert(0, 123)
+
+    def test_insert_a_second_defaults_at_first_index_raises(self):
+        s = AdapterSet(Defaults())
+
+        with pytest.raises(ValueError):
+            s.insert(0, Defaults())
+
+    def test_insert_a_second_overrides_at_last_index_raises(self):
+        s = AdapterSet(Defaults(), Env(), Overrides())
+
+        with pytest.raises(ValueError):
+            s.insert(3, Overrides())
+
+    def test_insert_in_the_middle(self):
+        s = AdapterSet(Defaults(), Overrides())
+
+        s.insert(1, Env())
+        assert len(s) == 3
+        assert isinstance(s[1], Env)
+

@@ -116,6 +116,21 @@ class AdapterSet(deque):
         else:
             super(AdapterSet, self).append(adapter)
 
+    def insert(self, index, adapter):
+        if index < 0:
+            raise IndexError("AdapterSet doesn't support negative indexing")
+        
+        if not isinstance(adapter, Adapter):
+            raise TypeError("AdapterSet can only contain Adapter type objects") 
+
+        if index == 0:
+            self.appendleft(adapter)
+        elif index >= len(self):
+            self.append(adapter)
+        else:
+            self.rotate(index)
+            self.append(adapter)
+            self.rotate(-index)
 
     def _load_adapters(self, adapters):
         adapters_collection = []
