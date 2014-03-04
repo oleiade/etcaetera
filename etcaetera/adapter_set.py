@@ -8,6 +8,12 @@ class AdapterSet(deque):
         super(AdapterSet, self).__init__()
         self._load_adapters(adapters)
 
+    def __repr__(self):
+        return 'AdapterSet{}'.format(self.__str__())
+
+    def __str__(self):
+        return '({})'.format(', '.join([a.__str__() for a in self]))
+
     def __setitem__(self, key, value):
         if isinstance(value, Defaults) and key != 0:
                 raise IndexError("Defaults adapter shall always be unique and first")  
