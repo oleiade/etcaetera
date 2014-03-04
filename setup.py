@@ -41,6 +41,7 @@ setup(
     url='https://github.com/oleiade/etcaetera',
     packages=[
         'etcaetera',
+        'etcaetera.adapter',
     ],
     package_dir={'etcaetera': 'etcaetera'},
     include_package_data=True,
