@@ -6,7 +6,7 @@ from etcaetera.adapter import *
 class AdapterSet(deque):
     def __init__(self, *adapters):
         super(AdapterSet, self).__init__()
-        self._adapters = self._load_adapters(adapters)
+        self._load_adapters(adapters)
 
     def __setitem__(self, key, value):
         if isinstance(value, Defaults) and key != 0:
@@ -26,6 +26,18 @@ class AdapterSet(deque):
     def defaults(self, value):
         if not isinstance(value, Defaults):
             raise TypeError("Attribute must be of Defaults type")
+
+        if len(self) == 0:
+            self.appendleft(value)
+        else:
+            # If first member is already a Defaults adapter,
+            # replace it
+            if isinstance(self[0], Defaults):
+                self[0] = value
+            # Otherwise append the Defaults on left of the AdapterSet
+            else:
+                self.appendleft(value)
+
         self._defaults = value
 
     @property
@@ -38,6 +50,18 @@ class AdapterSet(deque):
     def overrides(self, value):
         if not isinstance(value, Overrides):
             raise TypeError("Attribute must be of Overrides type")
+
+        if len(self) == 0:
+            self.append(value)
+        else:
+            # If last member is already an Overrides adapter,
+            # replace it
+            if isinstance(self[len(self) - 1], Overrides):
+                self[len(self) - 1] = value
+            # Otherwise add the adapter on the right of the AdapterSet
+            else:
+                self.append(value)
+
         self._overrides = value
 
     def _load_adapters(self, adapters):

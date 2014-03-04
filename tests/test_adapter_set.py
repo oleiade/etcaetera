@@ -29,6 +29,42 @@ class TestAdapterSet:
         with pytest.raises(IndexError):
             s[0] = Overrides()
 
+    def test__set_defaults_with_invalid_type_raises(self):
+        s = AdapterSet()
+
+        with pytest.raises(TypeError):
+            s.defaults = 123
+
+    def test__set_defaults_of_empty_adapters_set(self):
+        s = AdapterSet()
+        s.defaults = Defaults()
+
+        assert isinstance(s[0], Defaults) is True
+
+    def test__set_defaults_of_non_empty_adapters_set_puts_it_first(self):
+        s = AdapterSet(Env())
+        s.defaults = Defaults()
+
+        assert isinstance(s[0], Defaults) is True
+
+    def test__set_overrides_with_invalid_type_raises(self):
+        s = AdapterSet()
+
+        with pytest.raises(TypeError):
+            s.overrides = 123
+
+    def test__set_overrides_of_empty_adapters_set(self):
+        s = AdapterSet()
+        s.overrides = Overrides()
+
+        assert isinstance(s[0], Overrides) is True
+
+    def test__set_overrides_of_non_empty_adapters_set_puts_it_last(self):
+        s = AdapterSet(Env())
+        s.overrides = Overrides()
+
+        assert isinstance(s[1], Overrides) is True
+
     def test_init_with_invalid_adapters_raises(self):
         with pytest.raises(TypeError):
             AdapterSet(123, "abc")
