@@ -59,16 +59,6 @@ class Config(dict):
         if not isinstance(value, (list, AdapterSet)):
             raise TypeError("adapters value has to be a list or AdapterSet.")
 
-        # Ensure Defaults are unique and first adapter, and
-        # Overrides are unique and last
-        for idx, adapter in enumerate(value):
-            if not isinstance(adapter, Adapter):
-                raise TypeError("adapters value have to be of Adapter type.")
-            elif isinstance(adapter, Defaults) and idx != 0:
-                raise ValueError("Defaults adapter should always be first.")
-            elif isinstance(adapter, Overrides) and idx != (len(value) - 1):
-                raise ValueError("Overrides adapter should always be last.")
-
         self._adapters = AdapterSet(*value)
 
     def load(self):
