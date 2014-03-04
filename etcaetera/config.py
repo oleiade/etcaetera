@@ -42,10 +42,7 @@ class Config(dict):
             if has_overrides is True:
                 # If adapters contains an Overrides adapter,
                 # insert at the index before it.
-                self.adapters.rotate(1)
-                self.adapters.append(adapter)
-                self.adapters.rotate(-1)
-                # self.adapters.insert(len(self.adapters) - 1, adapter)
+                self.adapters.insert(len(self.adapters) - 1, adapter)
             else:
                 # Otherwise, append it
                 self.adapters.append(adapter)
