@@ -113,3 +113,67 @@ class TestAdapterSet:
         assert isinstance(s[1], Env) and s[1] == first_env_adapter
         assert isinstance(s[2], Env) and s[2] == second_env_adapter
         assert isinstance(s[3], Overrides) and s[3] == overrides_adapter
+
+    def test_appendleft_raises_when_provided_with_non_adapter(self):
+        s = AdapterSet()
+
+        with pytest.raises(TypeError):
+            s.appendleft(123)
+
+    def test_appendleft_raises_when_providing_a_second_defaults(self):
+        s = AdapterSet(Defaults())
+
+        with pytest.raises(ValueError):
+            s.appendleft(Defaults())
+
+    def test_appendleft_raises_when_providing_a_second_overrides(self):
+        s = AdapterSet(Overrides())
+
+        with pytest.raises(ValueError):
+            s.appendleft(Overrides())
+
+    def test_appendleft_sets_defaults_property(self):
+        s = AdapterSet(Env(), Env())
+
+        assert s.defaults is None
+        s.appendleft(Defaults())
+        assert s.defaults is not None
+
+    def test_appendleft_sets_defaults_overrides(self):
+        s = AdapterSet(Env(), Env())
+
+        assert s.overrides is None
+        s.appendleft(Overrides())
+        assert s.overrides is not None
+
+    def test_append_raises_when_provided_with_non_adapter(self):
+        s = AdapterSet()
+
+        with pytest.raises(TypeError):
+            s.append(123)
+
+    def test_append_raises_when_providing_a_second_defaults(self):
+        s = AdapterSet(Defaults())
+
+        with pytest.raises(ValueError):
+            s.append(Defaults())
+
+    def test_append_raises_when_providing_a_second_overrides(self):
+        s = AdapterSet(Overrides())
+
+        with pytest.raises(ValueError):
+            s.append(Overrides())
+
+    def test_append_sets_defaults_property(self):
+        s = AdapterSet(Env(), Env())
+
+        assert s.defaults is None
+        s.append(Defaults())
+        assert s.defaults is not None
+
+    def test_append_sets_overrides_property(self):
+        s = AdapterSet(Env(), Env())
+
+        assert s.overrides is None
+        s.append(Overrides())
+        assert s.overrides is not None

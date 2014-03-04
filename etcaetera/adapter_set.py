@@ -70,6 +70,53 @@ class AdapterSet(deque):
 
         self._overrides = value
 
+    def appendleft(self, adapter):
+        if not isinstance(adapter, Adapter):
+            raise TypeError
+
+        if isinstance(adapter, Defaults):
+            if len(self) >= 1 and isinstance(self[0], Defaults):
+                raise ValueError("Cannot add two defaults adapter to the same set")
+            else:
+                # If provided adatper is a Defaults and there are no one present
+                # in the set yet, appendleft it, and set _defaults to it
+                super(AdapterSet, self).appendleft(adapter)
+                self._defaults = adapter
+        elif isinstance(adapter, Overrides):
+            if len(self) >= 1 and isinstance(self[0], Overrides):
+                raise ValueError("Cannot add two overrides adapter to the same set")
+            else:
+                # If provided adatper is an Overrides and there are no one present
+                # in the set yet, appendleft it, and set _overrides to it
+                super(AdapterSet, self).appendleft(adapter)
+                self._overrides = adapter
+        else:
+            super(AdapterSet, self).appendleft(adapter)
+
+    def append(self, adapter):
+        if not isinstance(adapter, Adapter):
+            raise TypeError
+
+        if isinstance(adapter, Overrides):
+            if len(self) >= 1 and isinstance(self[-1], Overrides):
+                raise ValueError("Cannot add two overrides adapter to the same set")
+            else:
+               # If provided adatper is an Overrides and there are no one present
+                # in the set yet, append it, and set _overrides to it
+                super(AdapterSet, self).append(adapter)
+                self._overrides = adapter
+        elif isinstance(adapter, Defaults):
+            if len(self) >= 1 and isinstance(self[0], Defaults):
+                raise ValueError("Cannot add two overrides adapter to the same set")
+            else:
+                # If provided adatper is a Defaults and there are no one present
+                # in the set yet, append it, and set _defaults to it
+                super(AdapterSet, self).append(adapter)
+                self._defaults = adapter
+        else:
+            super(AdapterSet, self).append(adapter)
+
+
     def _load_adapters(self, adapters):
         adapters_collection = []
 
