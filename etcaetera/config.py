@@ -2,6 +2,7 @@ from collections import deque
 
 from etcaetera.adapter import (
     Adapter,
+    AdapterSet,
     Defaults,
     Overrides,
     Env
@@ -9,36 +10,23 @@ from etcaetera.adapter import (
 
 
 class Config(dict):
-    def __init__(self, defaults=None, adapters=None):
-        self.adapters = adapters or []
+    def __init__(self, defaults=None, overrides=None, *adapters):
+        self.adapters = AdapterSet(*adapters)
 
         if defaults is not None:
-            if not isinstance(defaults, (Defaults, dict)):
-                raise TypeError("defaults has to be of Defaults type")
+            self.defaults = defaults
 
-            if isinstance(defaults, dict):
-                self.register(Defaults(data=defaults))
-            else:
-                self.register(defaults)
+        if overrides is not None:
+            self.overrides = overrides
 
     def register(self, adapter):
         """Registers an adapter to be applied by config"""
-        if not isinstance(adapter, Adapter):
-            raise TypeError("adapter has to be of Adapter type.")
-
-        has_defaults = len(self.adapters) >= 1 and isinstance(self.adapters[0], Defaults)
-        has_overrides = len(self.adapters) >= 1 and isinstance(self.adapters[len(self.adapters) - 1], Overrides)
-
         if isinstance(adapter, Defaults):
-            if has_defaults is True:
-                raise ValueError("Config can have only one Defaults adapter")
-            self.adapters.insert(0, adapter)
+            self.adapters.defaults = adapter
         elif isinstance(adapter, Overrides):
-            if has_overrides is True:
-                raise ValueError("Config can have only one Overrides adapter")
-            self.adapters.append(adapter)
+            self.adapters.overrides = adapter
         else:
-            if has_overrides is True:
+            if self.adapters.overrides is not None:
                 # If adapters contains an Overrides adapter,
                 # insert at the index before it.
                 self.adapters.insert(len(self.adapters) - 1, adapter)
@@ -47,28 +35,34 @@ class Config(dict):
                 self.adapters.append(adapter)
 
     @property
+    def defaults(self):
+        return self.adapters.defaults
+
+    @defaults.setter
+    def defaults(self, value):
+        self.adapters.defaults = value
+
+    @property
+    def overrides(self):
+        return self.adapters.overrides
+
+    @overrides.setter
+    def overrides(self, value):
+        self.adapters.overrides = value
+
+    @property
     def adapters(self):
         if not hasattr(self, '_adapters'):
-            self._adapters = []
+            self._adapters = AdapterSet()
         return self._adapters
 
     @adapters.setter
     def adapters(self, value):
         # Ensure adapters is a list of adapters
-        if not isinstance(value, list):
-            raise TypeError("adapters value has to be a list.")
+        if not isinstance(value, (list, AdapterSet)):
+            raise TypeError("adapters value has to be a list or AdapterSet.")
 
-        # Ensure Defaults are unique and first adapter, and
-        # Overrides are unique and last
-        for idx, adapter in enumerate(value):
-            if not isinstance(adapter, Adapter):
-                raise TypeError("adapters value have to be of Adapter type.")
-            elif isinstance(adapter, Defaults) and idx != 0:
-                raise ValueError("Defaults adapter should always be first.")
-            elif isinstance(adapter, Overrides) and idx != (len(value) - 1):
-                raise ValueError("Overrides adapter should always be last.")
-
-        self._adapters = value
+        self._adapters = AdapterSet(*value)
 
     def load(self):
         for adapter in self.adapters:

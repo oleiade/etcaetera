@@ -1,6 +1,6 @@
 from collections import deque
 
-from etcaetera.adapter import *
+from etcaetera.adapter.base import *
 
 
 class AdapterSet(deque):
@@ -30,8 +30,12 @@ class AdapterSet(deque):
 
     @defaults.setter
     def defaults(self, value):
-        if not isinstance(value, Defaults):
-            raise TypeError("Attribute must be of Defaults type")
+        if not isinstance(value, (dict, Defaults)):
+            raise TypeError("Attribute must be of Defaults or dict type")
+
+        # If a dictionary was provided convert it to a Defaults obj
+        if isinstance(value, dict):
+            value = Defaults(data=value)
 
         if len(self) == 0:
             self.appendleft(value)
@@ -54,8 +58,12 @@ class AdapterSet(deque):
 
     @overrides.setter
     def overrides(self, value):
-        if not isinstance(value, Overrides):
-            raise TypeError("Attribute must be of Overrides type")
+        if not isinstance(value, (dict, Overrides)):
+            raise TypeError("Attribute must be of Overrides or dict type")
+
+        # If a dictionary was provided convert it to a Overrides obj
+        if isinstance(value, dict):
+            value = Overrides(data=value)
 
         if len(self) == 0:
             self.append(value)
@@ -116,10 +124,23 @@ class AdapterSet(deque):
         else:
             super(AdapterSet, self).append(adapter)
 
+    def insert(self, index, adapter):
+        if index < 0:
+            raise IndexError("AdapterSet doesn't support negative indexing")
+        
+        if not isinstance(adapter, Adapter):
+            raise TypeError("AdapterSet can only contain Adapter type objects") 
+
+        if index == 0:
+            self.appendleft(adapter)
+        elif index >= len(self):
+            self.append(adapter)
+        else:
+            self.rotate(index)
+            self.append(adapter)
+            self.rotate(-index)
 
     def _load_adapters(self, adapters):
-        adapters_collection = []
-
         for index, adapter in enumerate(adapters):
             if (isinstance(adapter, Defaults) and
                 (self.defaults is not None or index != 0)):
@@ -130,4 +151,4 @@ class AdapterSet(deque):
             elif not isinstance(adapter, Adapter):
                 raise TypeError("AdapterSet can only contain Adapter type objects")
 
-            super(AdapterSet, self).append(adapter)
+            self.append(adapter)
