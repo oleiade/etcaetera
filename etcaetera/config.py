@@ -19,20 +19,21 @@ class Config(dict):
         if overrides is not None:
             self.overrides = overrides
 
-    def register(self, adapter):
+    def register(self, *adapters):
         """Registers an adapter to be applied by config"""
-        if isinstance(adapter, Defaults):
-            self.adapters.defaults = adapter
-        elif isinstance(adapter, Overrides):
-            self.adapters.overrides = adapter
-        else:
-            if self.adapters.overrides is not None:
-                # If adapters contains an Overrides adapter,
-                # insert at the index before it.
-                self.adapters.insert(len(self.adapters) - 1, adapter)
+        for adapter in adapters:
+            if isinstance(adapter, Defaults):
+                self.adapters.defaults = adapter
+            elif isinstance(adapter, Overrides):
+                self.adapters.overrides = adapter
             else:
-                # Otherwise, append it
-                self.adapters.append(adapter)
+                if self.adapters.overrides is not None:
+                    # If adapters contains an Overrides adapter,
+                    # insert at the index before it.
+                    self.adapters.insert(len(self.adapters) - 1, adapter)
+                else:
+                    # Otherwise, append it
+                    self.adapters.append(adapter)
 
     @property
     def defaults(self):

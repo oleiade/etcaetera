@@ -167,6 +167,18 @@ class TestConfig:
         assert config.adapters[1] == file_adapter
         assert config.adapters[2] == overrides_adapter
 
+    def test_register_multiple_adapters(self):
+        config = Config()
+        defaults_adapter = Defaults()
+        env_adapter = Env()
+        file_adapter = File('/tmp/test')
+        config.register(defaults_adapter, env_adapter, file_adapter)
+
+        assert len(config.adapters) == 3
+        assert config.adapters[0] == defaults_adapter
+        assert config.adapters[1] == env_adapter
+        assert config.adapters[2] == file_adapter
+
     def test_load_method_loads_values_from_adapters(self):
         defaults = Defaults({"abc": "123"})
         config = Config()

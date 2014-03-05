@@ -79,7 +79,7 @@ A real world example worths it all
     >>> overrides = Overrides({"MY_FIRST_SETTING": "my forced value"})
 
     # Let's register them
-    >>> config.register([env_adapter, python_file_adapter, json_file_adapter, module_adapter, overrides])
+    >>> config.register(env_adapter, python_file_adapter, json_file_adapter, module_adapter, overrides)
 
     # Load configuration
     >>> config.load()
