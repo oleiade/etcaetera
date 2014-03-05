@@ -143,4 +143,4 @@ class AdapterSet(deque):
             elif not isinstance(adapter, Adapter):
                 raise TypeError("AdapterSet can only contain Adapter type objects")
 
-            super(AdapterSet, self).append(adapter)
+            self.append(adapter)
