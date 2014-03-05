@@ -46,6 +46,14 @@ class TestAdapterSet:
 
         assert isinstance(s[0], Defaults) is True
 
+    def test__set_defaults_using_a_dict(self):
+        s = AdapterSet(Env())
+        s.defaults = {"abc": "123"}
+
+        assert isinstance(s[0], Defaults) is True
+        assert isinstance(s.defaults, Defaults) is True
+        assert s.defaults.data == {"ABC": "123"}
+
     def test__set_overrides_with_invalid_type_raises(self):
         s = AdapterSet()
 
@@ -63,6 +71,14 @@ class TestAdapterSet:
         s.overrides = Overrides()
 
         assert isinstance(s[1], Overrides) is True
+
+    def test__set_overrides_using_a_dict(self):
+        s = AdapterSet(Env())
+        s.overrides = {"abc": "123"}
+
+        assert isinstance(s[1], Overrides) is True
+        assert isinstance(s.overrides, Overrides) is True
+        assert s.overrides.data == {"ABC": "123"}
 
     def test_init_with_invalid_adapters_raises(self):
         with pytest.raises(TypeError):

@@ -10,17 +10,14 @@ from etcaetera.adapter import (
 
 
 class Config(dict):
-    def __init__(self, defaults=None, *adapters):
+    def __init__(self, defaults=None, overrides=None, *adapters):
         self.adapters = AdapterSet(*adapters)
 
         if defaults is not None:
-            if not isinstance(defaults, (Defaults, dict)):
-                raise TypeError("defaults has to be of Defaults type")
+            self.defaults = defaults
 
-            if isinstance(defaults, dict):
-                self.register(Defaults(data=defaults))
-            else:
-                self.register(defaults)
+        if overrides is not None:
+            self.overrides = overrides
 
     def register(self, adapter):
         """Registers an adapter to be applied by config"""

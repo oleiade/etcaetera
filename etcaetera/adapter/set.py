@@ -30,8 +30,12 @@ class AdapterSet(deque):
 
     @defaults.setter
     def defaults(self, value):
-        if not isinstance(value, Defaults):
-            raise TypeError("Attribute must be of Defaults type")
+        if not isinstance(value, (dict, Defaults)):
+            raise TypeError("Attribute must be of Defaults or dict type")
+
+        # If a dictionary was provided convert it to a Defaults obj
+        if isinstance(value, dict):
+            value = Defaults(data=value)
 
         if len(self) == 0:
             self.appendleft(value)
@@ -54,8 +58,12 @@ class AdapterSet(deque):
 
     @overrides.setter
     def overrides(self, value):
-        if not isinstance(value, Overrides):
-            raise TypeError("Attribute must be of Overrides type")
+        if not isinstance(value, (dict, Overrides)):
+            raise TypeError("Attribute must be of Overrides or dict type")
+
+        # If a dictionary was provided convert it to a Overrides obj
+        if isinstance(value, dict):
+            value = Overrides(data=value)
 
         if len(self) == 0:
             self.append(value)
