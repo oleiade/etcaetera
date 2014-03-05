@@ -1,6 +1,6 @@
 from collections import deque
 
-from etcaetera.adapter import *
+from etcaetera.adapter.base import *
 
 
 class AdapterSet(deque):
@@ -133,8 +133,6 @@ class AdapterSet(deque):
             self.rotate(-index)
 
     def _load_adapters(self, adapters):
-        adapters_collection = []
-
         for index, adapter in enumerate(adapters):
             if (isinstance(adapter, Defaults) and
                 (self.defaults is not None or index != 0)):
