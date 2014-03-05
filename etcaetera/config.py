@@ -24,28 +24,34 @@ class Config(dict):
 
     def register(self, adapter):
         """Registers an adapter to be applied by config"""
-        if not isinstance(adapter, Adapter):
-            raise TypeError("adapter has to be of Adapter type.")
-
-        has_defaults = len(self.adapters) >= 1 and isinstance(self.adapters[0], Defaults)
-        has_overrides = len(self.adapters) >= 1 and isinstance(self.adapters[len(self.adapters) - 1], Overrides)
-
         if isinstance(adapter, Defaults):
-            if has_defaults is True:
-                raise ValueError("Config can have only one Defaults adapter")
-            self.adapters.appendleft(adapter)
+            self.adapters.defaults = adapter
         elif isinstance(adapter, Overrides):
-            if has_overrides is True:
-                raise ValueError("Config can have only one Overrides adapter")
-            self.adapters.append(adapter)
+            self.adapters.overrides = adapter
         else:
-            if has_overrides is True:
+            if self.adapters.overrides is not None:
                 # If adapters contains an Overrides adapter,
                 # insert at the index before it.
                 self.adapters.insert(len(self.adapters) - 1, adapter)
             else:
                 # Otherwise, append it
                 self.adapters.append(adapter)
+
+    @property
+    def defaults(self):
+        return self.adapters.defaults
+
+    @defaults.setter
+    def defaults(self, value):
+        self.adapters.defaults = value
+
+    @property
+    def overrides(self):
+        return self.adapters.overrides
+
+    @overrides.setter
+    def overrides(self, value):
+        self.adapters.overrides = value
 
     @property
     def adapters(self):
