@@ -66,7 +66,7 @@ A real world example worths it all
 .. code-block:: python
 
     >>> from etcaetera.config import Config
-    >>> from etcaetera.adapters import Defaults, Overrides, Env, File
+    >>> from etcaetera.adapters import Defaults, Module, Overrides, Env, File
 
     # Let's create a new configuration object
     >>> config = Config()
@@ -108,31 +108,29 @@ Please note that **Defaults** adapter will always be loaded first, and **Overrid
 
     >>> from etcaetera.config import Config
 
-    # You can provide defaults to Config at initialization, whether as a Defaults object,
-    # or as a dict.
-    >>> config = Config({"abc": "123"})
+    # Create a Config object
+    >>> config = Config()
 
-    >>> print config
-    {
-        "ABC": "123  # every Config keys will be automatically uppercased
-    }
-
-    # When you register adapters to it, they are not immediately evaluated.
+    # Let's register adapters to it. When adapters are registered on a Config
+    # they are not immediately evaluated.
+    >>> config.register(Defaults({"abc": "123"}))
+    >>> assert "ABC" not in config
     >>> config.register(Env(["USER", "PWD"])
     >>> assert "USER" not in config
     True
     >>> assert "PWD" not in config
     True
-    >>> config.register(Overrides({"abc": "do re mi"})
-    >>> assert config["ABC"] != "do re mi"
-    True
 
-    # Whenever you call load, adapters are evaluated and your config
-    # values are updated accordingly
+    # We can see that our adapters registration has been taken in account
+    >>> config.adapters
+    AdapterSet(<Defaults 0x1238f2a>, <Env 0xe3a12bd>)
+
+    # Whenever you call load, adapters are evaluated in the order you've
+    # registered them, and your config values are updated accordingly
     >>> config.load()
     >>> print config
     {
-        "ABC": "do re mi",
+        "ABC": "123",
         "USER": "your user",
         "PWD": "/current/working/directory"
     }
