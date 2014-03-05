@@ -10,7 +10,8 @@ from etcaetera.adapter import (
     Env,
     File,
     Module,
-    Defaults
+    Defaults,
+    Overrides
 )
 
 

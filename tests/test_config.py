@@ -89,15 +89,15 @@ class TestConfig:
         assert len(config.adapters) == 1
         assert config.adapters[0] == defaults_adapter
 
-    def test_register_a_second_defaults_raises(self):
+    def test_register_a_second_defaults_overrides_existing_one(self):
         env_adapter = Env()
         defaults_adapter = Defaults({"abc": "123"})
         config = Config()
-
         config.adapters = [defaults_adapter, env_adapter]
 
-        with pytest.raises(ValueError):
-            config.register(defaults_adapter)
+        new_defaults = Defaults({"easy as": "do re mi"})
+        config.register(new_defaults)
+        assert config.defaults == new_defaults
 
     def test_register_sets_overrides_adapter_as_last_with_existing_adapters(self):
         env_adapter = Env()
@@ -120,16 +120,15 @@ class TestConfig:
         assert len(config.adapters) == 1
         assert config.adapters[0] == overrides_adapter 
 
-    def test_register_a_second_overrides_raises(self):
+    def test_register_a_second_overrides_replaces_existing_one(self):
         env_adapter = Env()
         overrides_adapter = Overrides({"abc": "123"})
         config = Config()
+        config.adapters = [env_adapter, overrides_adapter]
 
-        config.adapters = [env_adapter]
-        config.register(overrides_adapter)
-
-        with pytest.raises(ValueError):
-            config.register(overrides_adapter)
+        new_overrides = Overrides({"easy as": "do re mi"})
+        config.register(new_overrides)
+        assert config.overrides == new_overrides
 
     def test_register_a_non_special_adapter_with_empty_adapters(self):
         env_adapter = Env()
@@ -167,6 +166,18 @@ class TestConfig:
         assert config.adapters[0] == env_adapter
         assert config.adapters[1] == file_adapter
         assert config.adapters[2] == overrides_adapter
+
+    def test_register_multiple_adapters(self):
+        config = Config()
+        defaults_adapter = Defaults()
+        env_adapter = Env()
+        file_adapter = File('/tmp/test')
+        config.register(defaults_adapter, env_adapter, file_adapter)
+
+        assert len(config.adapters) == 3
+        assert config.adapters[0] == defaults_adapter
+        assert config.adapters[1] == env_adapter
+        assert config.adapters[2] == file_adapter
 
     def test_load_method_loads_values_from_adapters(self):
         defaults = Defaults({"abc": "123"})

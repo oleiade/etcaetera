@@ -33,7 +33,7 @@ history = open('HISTORY.rst').read().replace('.. :changelog:', '')
 
 setup(
     name='etcaetera',
-    version='0.1.0',
+    version='0.2.0',
     description='Manage multiple configuration sources in a single place',
     long_description=readme + '\n\n' + history,
     author='Oleiade',
@@ -41,6 +41,7 @@ setup(
     url='https://github.com/oleiade/etcaetera',
     packages=[
         'etcaetera',
+        'etcaetera.adapter',
     ],
     package_dir={'etcaetera': 'etcaetera'},
     include_package_data=True,

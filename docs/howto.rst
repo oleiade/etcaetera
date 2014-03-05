@@ -42,7 +42,7 @@ A real world example is worth a thousand words
 .. code-block:: python
 
     >>> from etcaetera.config import Config
-    >>> from etcaetera.adapters import Defaults, Overrides, Env, File
+    >>> from etcaetera.adapters import Defaults, Module, Overrides, Env, File
 
     # Let's create a new configuration object
     >>> config = Config()
@@ -55,7 +55,7 @@ A real world example is worth a thousand words
     >>> overrides = Overrides({"MY_FIRST_SETTING": "my forced value"})
 
     # Let's register them
-    >>> config.register([env_adapter, python_file_adapter, json_file_adapter, module_adapter, overrides])
+    >>> config.register(env_adapter, python_file_adapter, json_file_adapter, module_adapter, overrides)
 
     # Load configuration
     >>> config.load()
@@ -84,34 +84,34 @@ Please note that **Defaults** adapter will always be loaded first, and **Overrid
 .. code-block:: python
 
     >>> from etcaetera.config import Config
+    >>> from etcaetera.adapters import Defaults, Module, Overrides, Env, File
 
-    # You can provide defaults to Config at initialization, whether as a Defaults object,
-    # or as a dict.
-    >>> config = Config({"abc": "123"})
+    # Let's create a new configuration object
+    >>> config = Config()
 
-    >>> print config
-    {
-        "ABC": "123  # every Config keys will automatically be uppercased
-    }
+    # And create a bunch of adapters
+    >>> env_adapter = Env(keys=["MY_FIRST_SETTING", "MY_SECOND_SETTING"])
+    >>> python_file_adapter = File('/etc/my/python/settings.py')
+    >>> json_file_adapter = File('/etc/my_json_settings.json')
+    >>> module_adapter = Module(os)
+    >>> overrides = Overrides({"MY_FIRST_SETTING": "my forced value"})
 
-    # When you register adapters to it, they are not immediately evaluated.
-    >>> config.register(Env(["USER", "PWD"])
-    >>> assert "USER" not in config
-    True
-    >>> assert "PWD" not in config
-    True
-    >>> config.register(Overrides({"abc": "do re mi"})
-    >>> assert config["ABC"] != "do re mi"
-    True
+    # Let's register them
+    >>> config.register(env_adapter, python_file_adapter, json_file_adapter, module_adapter, overrides)
 
-    # Whenever you call load, adapters are evaluated and your config
-    # values are updated accordingly
+    # Load configuration
     >>> config.load()
+
+
+    # And that's it
     >>> print config
     {
-        "ABC": "do re mi",
-        "USER": "your user",
-        "PWD": "/current/working/directory"
+        "MY_FIRST_SETTING": "my forced value",
+        "MY_SECOND_SETTING": "my second value",
+        "FIRST_YAML_SETTING": "first yaml setting value found in yaml settings",
+        "FIRST_JSON_SETTING": "first json setting value found in json settings",
+        ...
+>>>>>>> release/0.2.0
     }
 
 .. _adapters:
