@@ -11,6 +11,7 @@ Etcaetera
 .. image:: https://pypip.in/d/etcaetera/badge.png
         :target: https://crate.io/packages/etcaetera?version=latest
 
+
 What?
 =====
 
@@ -23,7 +24,6 @@ Once you call ``load`` method on it: your settings are loaded from your adapters
 You're **done**.
 
 
-
 Why?
 ====
 
@@ -34,6 +34,7 @@ Command line, files, system environment, modules, the settings you seek come fro
 They all have a different accessing mode and merging them can sometimes seem impossible !
 
 Etcaetera provides you with a simple and unified way to handle all the complexity in a single place.
+
 
 Installation
 ============
@@ -65,8 +66,9 @@ A real world example is worth a thousand words
 
 .. code-block:: python
 
+    >>> import os
     >>> from etcaetera.config import Config
-    >>> from etcaetera.adapters import Defaults, Module, Overrides, Env, File
+    >>> from etcaetera.adapter import Defaults, Module, Overrides, Env, File
 
     # Let's create a new configuration object
     >>> config = Config()
@@ -84,9 +86,8 @@ A real world example is worth a thousand words
     # Load configuration
     >>> config.load()
 
-
     # And that's it
-    >>> print config
+    >>> print(config)
     {
         "MY_FIRST_SETTING": "my forced value",
         "MY_SECOND_SETTING": "my second value",
@@ -94,7 +95,6 @@ A real world example is worth a thousand words
         "FIRST_JSON_SETTING": "first json setting value found in json settings",
         ...
     }
-
 
 Config object
 -------------
@@ -106,19 +106,18 @@ Please note that **Defaults** adapter will always be loaded first, and **Overrid
 .. code-block:: python
 
     >>> from etcaetera.config import Config
+    >>> from etcaetera.adapter import Defaults, Env
 
     # Create a Config object
     >>> config = Config()
 
     # Let's register adapters to it. When adapters are registered on a Config
     # they are not immediately evaluated.
-    >>> config.register(Defaults({"abc": "123"}))
+    >>> config.register(Defaults({"ABC": "123"}))
     >>> assert "ABC" not in config
     >>> config.register(Env(["USER", "PWD"])
     >>> assert "USER" not in config
-    True
     >>> assert "PWD" not in config
-    True
 
     # We can see that our adapters registration has been taken in account
     >>> config.adapters
@@ -127,13 +126,12 @@ Please note that **Defaults** adapter will always be loaded first, and **Overrid
     # Whenever you call load, adapters are evaluated in the order you've
     # registered them, and your config values are updated accordingly
     >>> config.load()
-    >>> print config
+    >>> print(config)
     {
         "ABC": "123",
         "USER": "your user",
         "PWD": "/current/working/directory"
     }
-
 
 Adapters
 --------
@@ -162,13 +160,16 @@ or as a dictionary.
 
 .. code-block:: python
 
+    >>> from etcaetera.config import Config
     >>> from etcaetera.adapter import Defaults
 
     # Defaults adapter provides default configuration settings
     >>> defaults = Defaults({"ABC": "123"})
-    >>> config = Config(defaults)
 
-    >>> print config
+    >>> config = Config(defaults)
+    >>> config.load()
+
+    >>> print(config)
     {
         "ABC": "123"
     }
@@ -181,6 +182,7 @@ It will always be evaluated last when the ``Config.load`` method is called.
 
 .. code-block:: python
 
+    >>> from etcaetera.config import Config
     >>> from etcaetera.adapter import Overrides
 
     # The Overrides adapter helps you set overriding configuration settings.
@@ -188,20 +190,18 @@ It will always be evaluated last when the ``Config.load`` method is called.
     # Use it if you wish to force some config values.
     >>> overrides_adapter = Overrides({"USER": "overrided value"})
     >>> config = Config({
-        "USER": "default_value",
+        "USER": "default value",
         "FIRST_SETTING": "first setting value"
     })
 
-    >>> config.register(overrides_default)
+    >>> config.register(overrides_adapter)
     >>> config.load()
 
-    >>> print config
+    >>> print(config)
     {
-        "USER": "overrided user",
+        "USER": "overrided value",
         "FIRST_SETTING": "first setting value"
     }
-
-
 
 Env adapter
 ~~~~~~~~~~~
@@ -221,7 +221,7 @@ the parent *Config* object will automatically provide it's own.
     # with those provided at initialization.
     >>> env.load(keys=["PWD"])
 
-    >>> print env.data
+    >>> print(env.data)
     {
         "USER": "user extracted from environment",
         "PATH": "path extracted from environment",
@@ -234,7 +234,6 @@ File adapter
 The File adapter will load the configuration settings from a file.
 Supported formats are json, yaml and python module files. Every key-value pairs
 stored in the pointed file will be loaded in the *Config* object it is registered to.
-
 
 Python module files
 ```````````````````
@@ -263,7 +262,7 @@ will be loaded. Any python data structures can be used.
     >>> file = File('/my/settings.py')
     >>> file.load()
 
-    >>> print file.data
+    >>> print(file.data)
     {
         "FIRST_SETTING": 123,
         "SECOND_SETTING": "this is the second value",
@@ -294,12 +293,11 @@ Serialized files (aka json and yaml)
     >>> file = File('/my/json/file.json')
     >>> file.load()
 
-    >>> print file.data
+    >>> print(file.data)
     {
         "FIRST_SETTING": "first json file extracted setting",
         "SECOND_SETTING": "second json file extracted setting"
     }
-
 
 Module adapter
 ~~~~~~~~~~~~~~
@@ -318,13 +316,14 @@ settings module loading behavior, so that every uppercased locals of the module 
 
 .. code-block:: python
 
+    >>> import mymodule
     >>> from etcaetera.adapter import Module
 
     # It will extract all of the module's uppercased local variables
     >>> module = Module(mymodule.settings)
     >>> module.load()
 
-    >>> print module.data
+    >>> print(module.data)
     {
         MY_FIRST_SETTING = 123
         MY_SECOND_SETTING = "abc"
@@ -339,8 +338,8 @@ Please read the `Contributing <https://github.com/oleiade/etcaetera/blob/develop
 If you are lazy, here's a summary:
 
 1. Found a bug? Want to add a feature? Check for open issues or open a fresh one to start a discussion about it.
-2. Fork the repository, and start making your changes
-3. Write some tests showing you fixed the current bug or your feature works as expected
+2. Fork the repository, and start making your changes.
+3. Write some tests showing you fixed the current bug or your feature works as expected.
 4. Fasten your seatbelt, and send a pull request to the *develop* branch.
 
 
