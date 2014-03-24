@@ -1,6 +1,8 @@
 from collections import deque
 
-from etcaetera.adapter.base import *
+from etcaetera.adapter.base import Adapter
+from etcaetera.adapter.defaults import Defaults
+from etcaetera.adapter.overrides import Overrides
 
 
 class AdapterSet(deque):
