@@ -67,9 +67,5 @@ class Config(dict):
 
     def load(self):
         for adapter in self.adapters:
-            if isinstance(adapter, Env):
-                adapter.load(keys=self.keys())
-            else:
-                adapter.load()
-
+            adapter.load()
             self.update(adapter.data)
