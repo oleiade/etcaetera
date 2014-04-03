@@ -21,7 +21,7 @@ class Env(Adapter):
         self.items = {self._format_key(k): self._format_key(v) for k, v in kwargs.items()}
 
     def load(self):
-        env_keys = self.keys + self.items.keys()
+        env_keys = self.keys + list(self.items.keys())
 
         for key in [self._format_key(k) for k in env_keys]:
             env_value = os.environ.get(self._format_key(key))
