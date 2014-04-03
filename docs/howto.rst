@@ -48,7 +48,7 @@ A real world example is worth a thousand words
     >>> config = Config()
 
     # And create a bunch of adapters
-    >>> env_adapter = Env(keys=["MY_FIRST_SETTING", "MY_SECOND_SETTING"])
+    >>> env_adapter = Env("MY_FIRST_SETTING", "MY_SECOND_SETTING")
     >>> python_file_adapter = File('/etc/my/python/settings.py')
     >>> json_file_adapter = File('/etc/my_json_settings.json')
     >>> module_adapter = Module(os)
@@ -90,7 +90,7 @@ Please note that **Defaults** adapter will always be loaded first, and **Overrid
     >>> config = Config()
 
     # And create a bunch of adapters
-    >>> env_adapter = Env(keys=["MY_FIRST_SETTING", "MY_SECOND_SETTING"])
+    >>> env_adapter = Env("MY_FIRST_SETTING", "MY_SECOND_SETTING")
     >>> python_file_adapter = File('/etc/my/python/settings.py')
     >>> json_file_adapter = File('/etc/my_json_settings.json')
     >>> module_adapter = Module(os)
@@ -193,21 +193,19 @@ It will always be evaluated last when the ``Config.load`` method is called.
 Env adapter
 ~~~~~~~~~~~
 
-The Env adapter loads settings from your system environement.
-It should come with a list of keys to fetch. If you don't provide the keys yourself,
-the parent *Config* object will automatically provide it's own.
+Env adapter loads configuration variables values from system environment.
+You can whether provide it a keys to be fetched from environment list as ``*args``.
+Or you can pass it with a ``**kwargs`` dict of environment variables to be fetched
+as keys to adapter destination name values.
 
 .. code-block:: python
 
     >>> from etcaetera.adapter import Env
 
     # You can provide keys to be fetched by the adapter at construction
-    >>> env = Env(keys=["USER", "PATH"])
-
-    # Or whenever you call load over it. They will be merged
-    # with those provided at initialization.
-    >>> env.load(keys=["PWD"])
-
+    # as keys
+    >>> env = Env("USER", "PATH")
+    >>> env.load()
     >>> print env.data
     {
         "USER": "user extracted from environment",
@@ -215,6 +213,17 @@ the parent *Config* object will automatically provide it's own.
         "PWD": "pwd extracted from environment"
     }
 
+    # alternatively pass it as env var names to adapter var 
+    # names dict
+    >>> os.environ["SOURCE"], os.environ["OTHER_SOURCE"]
+    ("my first value", "my second value")
+    >>> env = Env({"SOURCE": "DEST", "OTHER_SOURCE": "TEST"})
+    >>> env.load()
+    >>> print env.data
+    {
+        "DEST": "my first value",
+        "TEST": "my second value"
+    }
 
 .. _file:
 
