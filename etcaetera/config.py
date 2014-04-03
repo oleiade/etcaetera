@@ -1,4 +1,4 @@
-from collections import deque
+from collections import deque, namedtuple
 
 from etcaetera.adapter import (
     Adapter,
@@ -11,6 +11,8 @@ from etcaetera.adapter import (
 
 class Config(dict):
     def __init__(self, defaults=None, overrides=None, *adapters):
+        self._subconfigs = {}
+
         self.adapters = AdapterSet(*adapters)
 
         if defaults is not None:
@@ -43,6 +45,7 @@ class Config(dict):
                 "Got {} instead".format(type(subconfig))
             )
 
+        self._subconfigs[name] = subconfig
         setattr(self, name, subconfig) 
 
     @property
@@ -76,6 +79,12 @@ class Config(dict):
         self._adapters = AdapterSet(*value)
 
     def load(self):
+        # Adapters loading
         for adapter in self.adapters:
             adapter.load()
             self.update(adapter.data)
+
+        # Subconfigs loading
+        for subconfig in self._subconfigs.values():
+            subconfig.load()
+
