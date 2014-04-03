@@ -113,7 +113,6 @@ Please note that **Defaults** adapter will always be loaded first, and **Overrid
         "FIRST_YAML_SETTING": "first yaml setting value found in yaml settings",
         "FIRST_JSON_SETTING": "first json setting value found in json settings",
         ...
->>>>>>> release/0.2.0
     }
 
     # If you need a certain hierarchy for your configuration
