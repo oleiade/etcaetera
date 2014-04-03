@@ -184,6 +184,9 @@ class TestConfig:
         sub_config = Config({"abc": "123"})
 
         main_config.add_subconfig('mysubconfig', sub_config)
+        assert 'mysubconfig' in main_config._subconfigs
+        assert main_config._subconfigs['mysubconfig'] == sub_config
+
         assert hasattr(main_config, 'mysubconfig')
         assert main_config.mysubconfig == sub_config
 
@@ -202,6 +205,29 @@ class TestConfig:
 
         assert "ABC" in config
         assert config["ABC"] == "123"
+
+    def test_load_method_forces_subconfig_adapters_loading(self):
+        main_config = Config()
+
+        subconfig = Config()
+        subconfig_env_adapter = Env("TEST")
+        subconfig.register(subconfig_env_adapter)
+
+        main_config.add_subconfig('test_subconfig', subconfig)
+
+        os.environ["TEST"] = "test"
+
+        assert hasattr(main_config, 'test_subconfig')
+        assert main_config.test_subconfig == subconfig
+        assert not main_config.test_subconfig
+
+        main_config.load()
+
+        assert 'TEST' in main_config.test_subconfig
+        assert main_config.test_subconfig['TEST'] == 'test'
+
+        del os.environ["TEST"]
+        
 
     def test_load_passes_its_keys_to_env_loading(self):
         env = Env("USER", "PATH")

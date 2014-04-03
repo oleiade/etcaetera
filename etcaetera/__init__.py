@@ -3,4 +3,4 @@
 
 __author__ = 'Oleiade'
 __email__ = 'tcrevon@gmail.com'
-__version__ = '1 commit'
+__version__ = ''
