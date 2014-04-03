@@ -179,6 +179,20 @@ class TestConfig:
         assert config.adapters[1] == env_adapter
         assert config.adapters[2] == file_adapter
 
+    def test_add_subconfig_adds_config_as_attribute(self):
+        main_config = Config()
+        sub_config = Config({"abc": "123"})
+
+        main_config.add_subconfig('mysubconfig', sub_config)
+        assert hasattr(main_config, 'mysubconfig')
+        assert main_config.mysubconfig == sub_config
+
+    def test_add_subconfig_with_invalid_type_raises(self):
+        config = Config()
+
+        with pytest.raises(TypeError):
+            config.add_subconfig(config)
+
     def test_load_method_loads_values_from_adapters(self):
         defaults = Defaults({"abc": "123"})
         config = Config()

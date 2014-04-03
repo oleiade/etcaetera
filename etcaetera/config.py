@@ -35,6 +35,16 @@ class Config(dict):
                     # Otherwise, append it
                     self.adapters.append(adapter)
 
+    def add_subconfig(self, name, subconfig):
+        """Attaches a sub-config to the current Config object"""
+        if not isinstance(subconfig, Config):
+            raise TypeError(
+                "Subconfig has to be of Config type. "
+                "Got {} instead".format(type(subconfig))
+            )
+
+        setattr(self, name, subconfig) 
+
     @property
     def defaults(self):
         return self.adapters.defaults

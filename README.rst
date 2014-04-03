@@ -99,7 +99,9 @@ A real world example is worth a thousand words
 Config object
 -------------
 
-The config object is the central place for your whole application settings. It loads your adapters in the order you've registered them, and updates itself using it's data.
+The config object is the central place for your whole application settings. It will load your adapters
+in the order you've registered them, and update itself using it's data. Furthermore you can attach sub config
+objects to it, in order to keep a clean configuration hierarchy.
 
 Please note that **Defaults** adapter will always be loaded first, and **Overrides** will always be loaded last.
 
@@ -133,6 +135,21 @@ Please note that **Defaults** adapter will always be loaded first, and **Overrid
         "PWD": "/current/working/directory"
     }
 
+    # If you need a certain hierarchy for your configuration
+    # Config objects supports sub configs. Here's an example of
+    # how to add an "aws" subconfig
+    >>> aws_config = Config()  # Create a config obj
+    >>> aws_env = Env("AWS_ACCESS_KEY_ID", "AWS_SECRET_ACCESS_KEY")
+    >>> aws_config.register(aws_env)  # Register an env adapter on to it
+    >>> config.add_subconfig('aws', aws_config)
+    >>> config.aws
+    {
+        "AWS_ACCESS_KEY_ID": "128u09ijod019jhd182o1290d81",
+        "AWS_SECRET_ACCESS_KEY": "qoiejdn0182hern1d098uj12podij1029udaiwjJBIU09u0oimJHKI"
+    }
+
+
+>>>>>>> Add support for sub configs
 Adapters
 --------
 
