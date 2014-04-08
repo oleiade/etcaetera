@@ -14,6 +14,12 @@ class Env(Adapter):
     end name, for example you'd wanna register USER env variable as
     MY_USER adapter key, provide your associations as a 
     {src: dest, src: dest...} **mapping dict.
+
+    :param  keys: keys to be fetched from system environment
+    :type   keys: *args
+
+    :param  mapping: key to be fetched from env to adapter destination mapping
+    :type   mapping: **kwargs
     """
     def __init__(self, *keys, **mapping):
         super(Env, self).__init__()
