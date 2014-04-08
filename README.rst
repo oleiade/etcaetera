@@ -421,3 +421,9 @@ Credits and thanks
 
 Etcaetera is freely inspired (and could be considered as a port of) by [Conf](https://github.com/jingweno/conf).
 First of all thanks to it's author. And thanks to @botify who supported the creation of this open-source library.
+
+
+.. image:: https://d2weczhvl823v0.cloudfront.net/oleiade/etcaetera/trend.png
+   :alt: Bitdeli badge
+   :target: https://bitdeli.com/free
+
