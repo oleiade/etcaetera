@@ -209,9 +209,8 @@ Env adapter
 ~~~~~~~~~~~
 
 Env adapter loads configuration variables values from system environment.
-You can whether provide it a keys to be fetched from environment list as ``*args``.
-Or you can pass it with a ``**kwargs`` dict of environment variables to be fetched
-as keys to adapter destination name values.
+You can whether provide it a list of keys to be fetched from environment. Or you can pass it a *environment variables name to adapter destination name* ``**mappings`` dict.
+Moreover, as adapters support nested keys through the ``.`` separator you can map any env var to a nested adapter destination.
 
 .. code-block:: python
 
@@ -238,6 +237,16 @@ as keys to adapter destination name values.
     {
         "DEST": "my first value",
         "TEST": "my second value"
+    }
+
+    # Adapters support nested destination too
+    >>> env = Env({"MY.USER": "USER"})
+    >>> env.load()
+    >>> print env.data
+    {
+        "MY": {
+            "USER": "oleiade",
+        }
     }
 
 .. _file:
