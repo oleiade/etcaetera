@@ -8,12 +8,12 @@ class TestEnv:
         env = Env("abc", "123", "easy_as")
 
         assert env.keys == ['ABC', '123', 'EASY_AS']
-        assert env.items == {}
+        assert env.mapping == {}
 
-    def test_init_with_kwargs_sets_items_attribute(self):
+    def test_init_with_kwargs_sets_mapping_attribute(self):
         env = Env(**{"src_abc": "dest_abc", "src_easy_as": "dest_easy_as"})
 
-        assert env.items == {
+        assert env.mapping == {
             "SRC_ABC": "DEST_ABC",
             "SRC_EASY_AS": "DEST_EASY_AS"
         }

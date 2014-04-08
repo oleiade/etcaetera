@@ -33,7 +33,7 @@ history = open('HISTORY.rst').read().replace('.. :changelog:', '')
 
 setup(
     name='etcaetera',
-    version='0.3.0',
+    version='0.3.1',
     description='Manage multiple configuration sources in a single place',
     long_description=readme + '\n\n' + history,
     author='Oleiade',

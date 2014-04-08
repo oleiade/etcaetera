@@ -1,6 +1,7 @@
 import os
 
 from etcaetera.adapter.base import Adapter
+from etcaetera.utils import format_key
 
 
 class Env(Adapter):
@@ -10,24 +11,30 @@ class Env(Adapter):
     key-value pairs from the system environment to a Config object.
 
     To select system environment keys provide it as an uppercased
-    strings *args list. If you need to fetch a given env key as another
+    strings *keys list. If you need to fetch a given env key as another
     end name, for example you'd wanna register USER env variable as
     MY_USER adapter key, provide your associations as a 
-    {src: dest, src: dest...} **kwargs dict.
+    {src: dest, src: dest...} **mapping dict.
+
+    :param  keys: keys to be fetched from system environment
+    :type   keys: *args
+
+    :param  mapping: key to be fetched from env to adapter destination mapping
+    :type   mapping: **kwargs
     """
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *keys, **mapping):
         super(Env, self).__init__()
-        self.keys = [self._format_key(k) for k in args]
-        self.items = {self._format_key(k): self._format_key(v) for k, v in kwargs.items()}
+        self.keys = [format_key(k) for k in keys]
+        self.mapping = {format_key(k): format_key(v) for k, v in mapping.items()}
 
     def load(self):
-        env_keys = self.keys + list(self.items.keys())
+        env_keys = self.keys + list(self.mapping.keys())
 
-        for key in [self._format_key(k) for k in env_keys]:
-            env_value = os.environ.get(self._format_key(key))
+        for key in [format_key(k) for k in env_keys]:
+            env_value = os.environ.get(format_key(key))
 
             if env_value is not None:
-                if key in self.items:
-                    self.data[self.items[key]] = env_value
+                if key in self.mapping:
+                    self[self.mapping[key]] = env_value
                 else:
-                    self.data[key] = env_value
+                    self[key] = env_value
