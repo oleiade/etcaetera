@@ -6,14 +6,16 @@ except ImportError:
     pass
 
 from etcaetera.utils import is_nested_key
+from etcaetera.formatters import uppercased
 
 
 Tree = lambda: defaultdict(Tree)
 
 
 class Adapter(object):
-    def __init__(self, *keys, **mapping):
+    def __init__(self, formatter=None, *keys, **mapping):
         self.data = Tree()
+        self.formatter = formatter or uppercased
 
     def __str__(self):
         return self.__class__.__name__
@@ -36,6 +38,10 @@ class Adapter(object):
             return
 
         self.data[key] = value
+
+    def format(self, key, formatter=None):
+        formatter = formatter or self.formatter
+        return formatter.format(key)
 
     def load(self):
         raise NotImplementedError
