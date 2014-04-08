@@ -149,7 +149,6 @@ Please note that **Defaults** adapter will always be loaded first, and **Overrid
     }
 
 
->>>>>>> Add support for sub configs
 Adapters
 --------
 
