@@ -19,14 +19,13 @@ class Adapter(object):
         return self.data[key]
 
     def __setitem__(self, key, value):
-        if nested_key(key):
+        if is_nested_key(key):
             subkeys = key.split('.')
-            subdict = self.data
 
-            for key in subkeys:
-                subdict = subdict[key]
+            reduce(lambda d, k: d[k], subkeys[:-1], self.data)[subkeys[-1]] = value
+            return
 
-            
+        self.data[key] = value
 
     def load(self):
         raise NotImplementedError

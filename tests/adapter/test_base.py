@@ -25,6 +25,33 @@ class TestAdapter:
 
         with pytest.raises(MalformationError):
             adapter['..abc']
+
+    def test___setitem___with_existing_nested_key_sets_its_value(self):
+        adapter = Adapter()
+        adapter.data['abc'] = {}
+
+        adapter['abc.123'] = 'easy as'
+
+        assert adapter.data['abc']['123'] == 'easy as'
+
+    def test___setitem___with_flat_existing_key_sets_its_value(self):
+        adapter = Adapter()
+        adapter['abc'] = 'easy as'
+
+        assert adapter['abc'] == 'easy as'
+
+    def test___setitem___with_non_existing_nested_key_parent_raises(self):
+        adapter = Adapter()
+        adapter['abc'] = 'easy as'
+
+        with pytest.raises(KeyError):
+            adapter['123.easy_as'] = 'do re mi'
+
+    def test___setitem___with_invalid_nested_key_raises(self):
+        adapter = Adapter()
+
+        with pytest.raises(MalformationError):
+            adapter['..abc'] = 'easy as'
         
     def test_load_is_not_implemented(self):
         adapter = Adapter()
