@@ -1,5 +1,6 @@
 from collections import deque, namedtuple
 
+from etcaetera.formatters import uppercased
 from etcaetera.adapter import (
     Adapter,
     AdapterSet,
@@ -10,7 +11,8 @@ from etcaetera.adapter import (
 
 
 class Config(dict):
-    def __init__(self, defaults=None, overrides=None, *adapters):
+    def __init__(self, defaults=None, overrides=None, formatter=None, *adapters):
+        self.formatter = formatter or uppercased
         self._subconfigs = {}
 
         self.adapters = AdapterSet(*adapters)
@@ -81,8 +83,9 @@ class Config(dict):
     def load(self):
         # Adapters loading
         for adapter in self.adapters:
-            adapter.load()
-            self.update(adapter.data)
+            adapter.load(formatter=self.formatter)
+            formatted_adapter_data = {self.formatter(k): v for k, v in adapter.data.items()}
+            self.update(formatted_adapter_data)
 
         # Subconfigs loading
         for subconfig in self._subconfigs.values():

@@ -1,8 +1,9 @@
+from etcaetera.formatters import environ
 from etcaetera.exceptions import MalformationError
 
 
 def format_key(key):
-    return key.strip().upper().replace(' ', '_')
+    return environ(key)
 
 
 def is_nested_key(key):

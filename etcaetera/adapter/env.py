@@ -27,7 +27,7 @@ class Env(Adapter):
         self.keys = [format_key(k) for k in keys]
         self.mapping = {format_key(k): format_key(v) for k, v in mapping.items()}
 
-    def load(self):
+    def load(self, formatter=None):
         env_keys = self.keys + list(self.mapping.keys())
 
         for key in [format_key(k) for k in env_keys]:
@@ -35,6 +35,6 @@ class Env(Adapter):
 
             if env_value is not None:
                 if key in self.mapping:
-                    self[self.mapping[key]] = env_value
+                    self[self.format(self.mapping[key], self.formatter)] = env_value
                 else:
-                    self[key] = env_value
+                    self[self.format(key, self.formatter)] = env_value

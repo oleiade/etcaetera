@@ -148,6 +148,18 @@ Please note that **Defaults** adapter will always be loaded first, and **Overrid
         "AWS_SECRET_ACCESS_KEY": "qoiejdn0182hern1d098uj12podij1029udaiwjJBIU09u0oimJHKI"
     }
 
+    # Config objects are also able to automatically format the keys incoming
+    # from adapters. For example if you'd want all your keys to be lowercased
+    # just pass it the appropriate formatter (from etcaetera.formatters import *)
+    >>> from etcaetera.formatters import lowercased
+    >>> formatted_config = Config(formatter=lowercased)
+    >>> env_adapter = Env(**{"USER": "SUPER_DUPER_USER"})
+    >>> formatted_config.register(env_adapter)
+    >>> formatted_config.load()
+    >>> print formatted_config
+    {
+        "super_duper_user": "oleiade",
+    }
 
 Adapters
 --------
@@ -165,6 +177,9 @@ Right now, etcaetera provides the following adapters:
 In a close future, etcaetera may provide adapters for:
     * *Argv* argparse format support: would load settings from an argparser parser attributes
     * *File* ini format support: would load settings from an ini file
+
+Cool features you should know about:
+    * You can provide a *formatter* to your adapters so the imported keys will be automatically modified. Example ``Env("USER", etcaetera.formatters.lowercased)`` will import the ``$USER`` environment variable as ``user`` when ``.load()`` is called. 
 
 Defaults adapter
 ~~~~~~~~~~~~~~~~
