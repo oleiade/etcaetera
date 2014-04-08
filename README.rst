@@ -416,3 +416,8 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+Credits and thanks
+==================
+
+Etcaetera is freely inspired (and could be considered as a port of) by [Conf](https://github.com/jingweno/conf).
+First of all thanks to it's author. And thanks to @botify who supported the creation of this open-source library.
