@@ -8,8 +8,5 @@ class Adapter(object):
     def __repr__(self):
         return '<{} {}>'.format(self.__str__(), id(self))
 
-    def _format_key(self, key):
-        return key.strip().upper().replace(' ', '_')
-
     def load(self):
         raise NotImplementedError
