@@ -148,6 +148,9 @@ In a close future, etcaetera may provide adapters for:
     * *Argv* argparse format support: would load settings from an argparser parser attributes
     * *File* ini format support: would load settings from an ini file
 
+Cool features you should know about:
+    * You can provide a *formatter* to your adapters so the imported keys will be automatically modified. Example ``Env("USER", etcaetera.formatters.lowercased)`` will import the ``$USER`` environment variable as ``user`` when ``.load()`` is called. 
+
 .. _defaults:
 
 Defaults adapter
