@@ -8,20 +8,20 @@ from etcaetera.formatters import (
 
 
 def test_uppercased_with_lowercased_str():
-    assert uppercased.format("abc") == "ABC"
+    assert uppercased("abc") == "ABC"
 
 
 def test_uppercased_with_uppercased_str():
-    assert uppercased.format("ABC") == "ABC"
+    assert uppercased("ABC") == "ABC"
 
 
 def test_lowercased_with_uppercased_str():
-    assert lowercased.format("ABC") == "abc"
+    assert lowercased("ABC") == "abc"
 
 
 def test_lowercased_with_lowercased_str():
-    assert lowercased.format("abc") == "abc"
+    assert lowercased("abc") == "abc"
 
 
 def test_environ():
-    assert environ.format("aBc 123") == "ABC_123"
+    assert environ("aBc 123") == "ABC_123"

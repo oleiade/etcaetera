@@ -3,7 +3,7 @@ from etcaetera.exceptions import MalformationError
 
 
 def format_key(key):
-    return environ.format(key)
+    return environ(key)
 
 
 def is_nested_key(key):

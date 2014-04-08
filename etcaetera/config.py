@@ -84,7 +84,7 @@ class Config(dict):
         # Adapters loading
         for adapter in self.adapters:
             adapter.load(formatter=self.formatter)
-            formatted_adapter_data = {self.formatter.format(k): v for k, v in adapter.data.items()}
+            formatted_adapter_data = {self.formatter(k): v for k, v in adapter.data.items()}
             self.update(formatted_adapter_data)
 
         # Subconfigs loading

@@ -41,7 +41,7 @@ class Adapter(object):
 
     def format(self, key, formatter=None):
         formatter = formatter or self.formatter
-        return formatter.format(key)
+        return formatter(key)
 
     def load(self):
         raise NotImplementedError

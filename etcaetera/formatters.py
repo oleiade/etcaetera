@@ -1,8 +1,13 @@
 from collections import namedtuple
 
 
-Formatter = namedtuple('Formatter', ['name', 'format'])
+def uppercased(s):
+    return s.upper()
 
-uppercased = Formatter('uppercased', lambda s: s.upper())
-lowercased = Formatter('lowercased', lambda s: s.lower())
-environ = Formatter('environ', lambda s: s.strip().upper().replace(' ', '_'))
+
+def lowercased(s):
+    return s.lower()
+
+
+def environ(s):
+    return s.strip().upper().replace(' ', '_')
