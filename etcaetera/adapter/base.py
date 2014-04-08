@@ -1,3 +1,8 @@
+try:
+    from functools import reduce
+except ImportError:
+    pass
+
 from etcaetera.utils import is_nested_key
 
 
