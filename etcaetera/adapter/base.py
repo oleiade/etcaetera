@@ -1,5 +1,5 @@
 class Adapter(object):
-    def __init__(self, config=None, *args, **kwargs):
+    def __init__(self, *keys, **mapping):
         self.data = {} 
 
     def __str__(self):
