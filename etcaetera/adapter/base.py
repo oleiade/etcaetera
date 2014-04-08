@@ -1,3 +1,5 @@
+from collections import defaultdict
+
 try:
     from functools import reduce
 except ImportError:
@@ -6,9 +8,12 @@ except ImportError:
 from etcaetera.utils import is_nested_key
 
 
+Tree = lambda: defaultdict(Tree)
+
+
 class Adapter(object):
     def __init__(self, *keys, **mapping):
-        self.data = {} 
+        self.data = Tree()
 
     def __str__(self):
         return self.__class__.__name__

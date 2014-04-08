@@ -40,13 +40,6 @@ class TestAdapter:
 
         assert adapter['abc'] == 'easy as'
 
-    def test___setitem___with_non_existing_nested_key_parent_raises(self):
-        adapter = Adapter()
-        adapter['abc'] = 'easy as'
-
-        with pytest.raises(KeyError):
-            adapter['123.easy_as'] = 'do re mi'
-
     def test___setitem___with_invalid_nested_key_raises(self):
         adapter = Adapter()
 

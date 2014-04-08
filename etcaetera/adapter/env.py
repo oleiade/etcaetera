@@ -35,6 +35,6 @@ class Env(Adapter):
 
             if env_value is not None:
                 if key in self.mapping:
-                    self.data[self.mapping[key]] = env_value
+                    self[self.mapping[key]] = env_value
                 else:
-                    self.data[key] = env_value
+                    self[key] = env_value
