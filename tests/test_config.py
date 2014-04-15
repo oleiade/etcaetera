@@ -142,8 +142,8 @@ class TestConfig:
     def test_register_non_special_adapters_protects_order(self):
         env_adapter = Env()
         file_adapter = File('/tmp/test')
-        config = Config()
 
+        config = Config()
         config.register(env_adapter)
         config.register(file_adapter)
         
@@ -153,8 +153,8 @@ class TestConfig:
 
     def test_register_non_special_adapters_with_overrides(self):
         env_adapter = Env()
-        file_adapter = File('/tmp/test')
         overrides_adapter = Overrides()
+        file_adapter = File('/tmp/test')
 
         config = Config()
         config.adapters = [overrides_adapter]
@@ -172,6 +172,7 @@ class TestConfig:
         defaults_adapter = Defaults()
         env_adapter = Env()
         file_adapter = File('/tmp/test')
+
         config.register(defaults_adapter, env_adapter, file_adapter)
 
         assert len(config.adapters) == 3
