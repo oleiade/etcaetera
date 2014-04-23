@@ -13,9 +13,13 @@ Tree = lambda: defaultdict(Tree)
 
 
 class Adapter(object):
-    def __init__(self, formatter=None, *keys, **mapping):
+    def __init__(self, formatter=None, strict=False, *keys, **mapping):
         self.data = Tree()
         self.formatter = formatter or uppercased
+        self.strict = strict
+
+        if self.strict is True:
+            self.strictness_check()
 
     def __str__(self):
         return self.__class__.__name__
@@ -38,6 +42,9 @@ class Adapter(object):
             return
 
         self.data[key] = value
+
+    def strictness_check(self):
+        pass
 
     def format(self, key, formatter=None):
         formatter = formatter or self.formatter

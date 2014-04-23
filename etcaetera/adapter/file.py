@@ -11,13 +11,16 @@ from etcaetera.constants import (
 
 
 class File(Adapter):
-    def __init__(self, filepath, strict=False, *args, **kwargs):
-        super(File, self).__init__(*args, **kwargs)
-        
-        if strict is True and not os.path.exists(filepath):
-            raise IOError("Path {} does not exist".format(filepath))
-
+    def __init__(self, filepath, *args, **kwargs):
         self.filepath = filepath
+
+        # If strict parameter (inherited from parent) is True,
+        # strictness_check routine will be called
+        super(File, self).__init__(*args, **kwargs)
+
+    def strictness_check(self):
+        if not os.path.exists(self.filepath):
+            raise IOError("Path {} does not exist".format(self.filepath))
 
     def load(self, formatter=None):
         _, file_extension = os.path.splitext(self.filepath)
