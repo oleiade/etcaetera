@@ -11,8 +11,12 @@ from etcaetera.constants import (
 
 
 class File(Adapter):
-    def __init__(self, filepath, *args, **kwargs):
+    def __init__(self, filepath, strict=False, *args, **kwargs):
         super(File, self).__init__(*args, **kwargs)
+        
+        if strict is True and not os.path.exists(filepath):
+            raise IOError("Path {} does not exist".format(filepath))
+
         self.filepath = filepath
 
     def load(self, formatter=None):

@@ -89,5 +89,10 @@ class Config(dict):
 
         # Subconfigs loading
         for subconfig in self._subconfigs.values():
+            # If sub configs haven't set their own formatter,
+            # ensure to cascade Config formatter to sub config objects
+            if subconfig.formatter is None and self.formatter is not None:
+                subconfig.formatter = self.formatter
+
             subconfig.load()
 

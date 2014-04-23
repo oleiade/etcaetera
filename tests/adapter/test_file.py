@@ -67,6 +67,10 @@ should_be_ignored = "YOU CAN'T SEE ME"
 
 
 class TestFile:
+    def test___init__with_strict_true_and_non_existing_filepath_raises(self):
+        with pytest.raises(IOError):
+            fadapter = File('abc 123 easy as 891n3idu91jwnd19dn129d', strict=True)
+
     def test_load_with_json_file(self, json_file):
         fadapter = File(json_file.name)
         fadapter.load()
