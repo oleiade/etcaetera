@@ -109,3 +109,15 @@ class TestFile:
 
         assert "should_be_ignored" not in fadapter.data
 
+    def test_load_with_non_existing_file_in_strict_mode_raises(self):
+        with pytest.raises(IOError):
+            fadapter = File('/tmp/does/not/exist')  # Here safe is False
+            fadapter.strict = True  # Change it to True for testing purposes
+            fadapter.load()
+
+    def test_load_with_non_existing_file_in_non_strict_mode_keeps_data_empty(self):
+        fadapter = File('/tmp/does/not/exist')
+        fadapter.strict = False
+        fadapter.load()
+
+        assert fadapter.data == {}
