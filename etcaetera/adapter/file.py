@@ -23,8 +23,15 @@ class File(Adapter):
             raise IOError("Path {} does not exist".format(self.filepath))
 
     def load(self, formatter=None):
+        try:
+            fd = open(self.filepath, 'r')
+        except IOError:
+            if self.strict is True:
+                raise
+            else:
+                return
+
         _, file_extension = os.path.splitext(self.filepath)
-        fd = open(self.filepath, 'r')
 
         if file_extension.lower() in JSON_EXTENSIONS:
             import json
