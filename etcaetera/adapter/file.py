@@ -20,7 +20,7 @@ class File(Adapter):
 
     def strictness_check(self):
         if not os.path.exists(self.filepath):
-            raise IOError("Path {} does not exist".format(self.filepath))
+            raise IOError("Path {0} does not exist".format(self.filepath))
 
     def load(self, formatter=None):
         try:
