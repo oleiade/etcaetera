@@ -12,5 +12,5 @@ class Module(Adapter):
         self.module = mod
 
     def load(self, formatter=None):
-        self.data = {self.format(k, formatter): v for k,v in vars(self.module).items()
-                     if k.isupper()}
+        self.data = dict((self.format(k, formatter), v) for k,v in vars(self.module).items()
+                     if k.isupper())

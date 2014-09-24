@@ -35,17 +35,17 @@ class File(Adapter):
 
         if file_extension.lower() in JSON_EXTENSIONS:
             import json
-            self.data = {self.format(k, formatter): v for k, v in json.load(fd).items()}
+            self.data = dict((self.format(k, formatter), v) for k, v in json.load(fd).items())
         elif file_extension.lower() in YAML_EXTENSIONS:
             from yaml import load as yload, dump as ydump
             try:
                 from yaml import CLoader as Loader
             except ImportError:
                 from yaml import Loader
-            self.data = {self.format(k, formatter):v for k,v in yload(fd, Loader=Loader).items()}
+            self.data = dict((self.format(k, formatter), v) for k, v in yload(fd, Loader=Loader).items())
         elif file_extension.lower() in PYTHON_EXTENSIONS:
             mod = imp.load_source('mod', self.filepath)
-            self.data = {self.format(k, formatter): v for k, v in vars(mod).items() if k.isupper()}
+            self.data = dict((self.format(k, formatter), v) for k, v in vars(mod).items() if k.isupper())
         else:
             raise ValueError("Unhandled file extension {0}".format(file_extension))
 
