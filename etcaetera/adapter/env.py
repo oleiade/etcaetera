@@ -25,7 +25,7 @@ class Env(Adapter):
     def __init__(self, *keys, **mapping):
         super(Env, self).__init__()
         self.keys = [format_key(k) for k in keys]
-        self.mapping = {format_key(k): format_key(v) for k, v in mapping.items()}
+        self.mapping = dict((format_key(k), format_key(v)) for k, v in mapping.items())
 
     def load(self, formatter=None):
         env_keys = self.keys + list(self.mapping.keys())

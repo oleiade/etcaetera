@@ -9,4 +9,4 @@ class Overrides(Adapter):
         self.load()
 
     def load(self, formatter=None):
-        self.data = {self.format(k, formatter): v for k, v in self.data.items()}
+        self.data = dict((self.format(k, formatter), v) for k, v in self.data.items())

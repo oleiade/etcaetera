@@ -44,7 +44,7 @@ class Config(dict):
         if not isinstance(subconfig, Config):
             raise TypeError(
                 "Subconfig has to be of Config type. "
-                "Got {} instead".format(type(subconfig))
+                "Got {0} instead".format(type(subconfig))
             )
 
         self._subconfigs[name] = subconfig
@@ -84,7 +84,7 @@ class Config(dict):
         # Adapters loading
         for adapter in self.adapters:
             adapter.load(formatter=self.formatter)
-            formatted_adapter_data = {self.formatter(k): v for k, v in adapter.data.items()}
+            formatted_adapter_data = dict((self.formatter(k), v) for k, v in adapter.data.items())
             self.update(formatted_adapter_data)
 
         # Subconfigs loading
