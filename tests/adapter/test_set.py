@@ -224,3 +224,64 @@ class TestAdapterSet:
         assert len(s) == 3
         assert isinstance(s[1], Env)
 
+    def test_insert_at_end_with_overrides(self):
+        s = AdapterSet(
+            Defaults(),
+            File('meh', strict=False),
+            File('meh2', strict=False),
+            Overrides()
+        )
+        s.insert(3, Env())
+        assert len(s) == 5
+        assert isinstance(s[3], Env)
+
+    def test_insert_in_middle_with_overrides(self):
+        s = AdapterSet(
+            Defaults(),
+            File('meh', strict=False),
+            File('meh2', strict=False),
+            Overrides()
+        )
+        s.insert(2, Env())
+        assert len(s) == 5
+        assert isinstance(s[2], Env)
+
+    def test_insert_in_middle_without_overrides(self):
+        s = AdapterSet(
+            Defaults(),
+            File('meh', strict=False),
+            File('meh2', strict=False),
+        )
+        s.insert(2, Env())
+        assert len(s) == 4
+        assert isinstance(s[2], Env)
+
+    def test_insert_at_end_without_overrides(self):
+        s = AdapterSet(
+            Defaults(),
+            File('meh', strict=False),
+            File('meh2', strict=False),
+        )
+        s.insert(3, Env())
+        assert len(s) == 4
+        assert isinstance(s[3], Env)
+
+    def test_insert_at_end_without_overrides_or_defaults(self):
+        s = AdapterSet(
+            File('meh', strict=False),
+            File('meh2', strict=False),
+            File('meh3', strict=False),
+        )
+        s.insert(3, Env())
+        assert len(s) == 4
+        assert isinstance(s[3], Env)
+
+    def test_insert_in_middle_without_overrides_or_defaults(self):
+        s = AdapterSet(
+            File('meh', strict=False),
+            File('meh2', strict=False),
+            File('meh3', strict=False),
+        )
+        s.insert(2, Env())
+        assert len(s) == 4
+        assert isinstance(s[2], Env)
