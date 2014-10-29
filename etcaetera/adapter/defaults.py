@@ -3,8 +3,12 @@ from etcaetera.utils import format_key
 
 
 class Defaults(Adapter):
-    def __init__(self, data={}, *args, **kwargs):
+    def __init__(self, data=None, *args, **kwargs):
         super(Defaults, self).__init__(*args, **kwargs)
+
+        if data is None:
+            data = {}
+
         self.data = data
         self.load()
 
